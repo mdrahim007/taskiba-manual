@@ -1,0 +1,1636 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link
+  rel="icon"
+  type="image/png"
+  href="taskiba_user_manual_files/Favicon_Light.png"
+  media="(prefers-color-scheme: light)">
+  <link
+  rel="icon"
+  type="image/png"
+  href="taskiba_user_manual_files/Favicon_Dark.png"
+  media="(prefers-color-scheme: dark)">
+  <title>Taskiba User Manual</title>
+  <meta name="description" content="Taskiba User Manual — setup, workspaces, projects, tasks, time tracking, billing, reports, and system settings." />
+  <link rel="stylesheet" href="taskiba_user_manual_files/styles.css" />
+</head>
+
+<body>
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="topbar__inner">
+      <button class="iconbtn topbar__menu" id="btnMenu" aria-label="Open menu">
+        <span class="icon">☰</span>
+      </button>
+
+<a class="brand" href="#" aria-label="Taskiba User Manual Home">
+  <img
+    src="taskiba_user_manual_files/Logo_Light.png"
+    alt="Taskiba"
+    class="brand__logo brand__logo--light"
+  />
+  <img
+    src="taskiba_user_manual_files/Logo_Dark.png"
+    alt="Taskiba"
+    class="brand__logo brand__logo--dark"
+  />
+
+  <!-- <span class="brand__text">
+    <span class="brand__title">Taskiba</span>
+    <span class="brand__subtitle">User Manual</span>
+  </span> -->
+</a>
+
+
+
+      <div class="topbar__actions">
+        <div class="search">
+          <span class="search__icon">⌕</span>
+          <input id="searchInput" class="search__input" type="search" placeholder="Search in the manual..." autocomplete="off" />
+          <kbd class="search__kbd">Ctrl + K</kbd>
+        </div>
+
+        <!-- <button class="iconbtn" id="btnTheme" aria-label="Toggle theme">
+          <span class="icon" id="themeIcon">🌙</span>
+        </button> -->
+      <button
+        class="theme-switch"
+        id="btnTheme"
+        type="button"
+        role="switch"
+        aria-checked="false"
+        aria-label="Toggle theme"
+        title="Toggle theme"
+      >
+        <span class="theme-switch__knob" aria-hidden="true">
+          <!-- Sun icon -->
+          <svg class="theme-switch__icon theme-switch__icon--sun" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+
+          <!-- Moon icon -->
+          <svg class="theme-switch__icon theme-switch__icon--moon" viewBox="0 0 24 24">
+            <path
+              d="M21 14.5A8.5 8.5 0 0 1 9.5 3a7 7 0 1 0 11.5 11.5Z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linejoin="round"
+              stroke-linecap="round"
+            />
+          </svg>
+        </span>
+      </button>
+        <a class="btn btn--primary" href="https://taskiba.com/">Get started</a>
+        <button
+          class="iconbtn iconbtn--all"
+          id="btnToggleAll"
+          type="button"
+          aria-label="Expand all sections"
+          title="Expand all"
+        >
+          <svg class="alltoggle__icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+            <!-- top chevron -->
+            <path class="chev chev--top" d="M7 10l5-5 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- bottom chevron -->
+            <path class="chev chev--bottom" d="M7 14l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile drawer backdrop -->
+  <div class="backdrop" id="backdrop" hidden></div>
+
+  <div class="layout" id="top">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Documentation navigation">
+      <div class="sidebar__top">
+        <div class="sidebar__title">Contents</div>
+        <button class="iconbtn sidebar__close" id="btnCloseMenu" aria-label="Close menu">
+          <span class="icon">✕</span>
+        </button>
+      </div>
+
+      <nav class="toc" id="toc" aria-label="Table of contents">
+        <!-- JS builds TOC from headings -->
+      </nav>
+
+      <div class="sidebar__footer">
+        <div class="muted">© <span id="year"></span> Taskiba by UY Systems Ltd.</div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main" aria-label="Documentation content">
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero__content">
+          <h1 class="hero__title">Taskiba User Manual</h1>
+          <p class="hero__lead">
+            A complete guide to setting up Taskiba, managing workspaces, projects, tasks, time tracking, billing,
+            reports, and system settings.
+          </p>
+
+            <div class="hero__cta">
+                <a class="btn btn--primary" href="#getting-started">Start reading</a>
+            </div>
+
+        </div>
+      </section>
+
+      <!-- Content -->
+      <article class="doc" id="doc">
+        <!-- ========================================================= -->
+        <!-- 1. Introduction -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="getting-started" data-collapsible>
+          <header class="doc-section__header">
+            <h2>1. Getting Started with Taskiba</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+
+          <div class="doc-section__body">
+            <h3>1.1 What is Taskiba?</h3>
+            <p>
+              Taskiba is a project and work management platform that helps teams plan work, track progress, manage time and costs,
+              collaborate with stakeholders, and keep delivery predictable. It’s designed to work for small teams and scale for
+              multi-department organizations.
+            </p>
+            <img class="image" src="taskiba_user_manual_files/Dashboard.png" alt="Dashboard">
+
+            <h3>1.2 Key Features Overview</h3>
+            <ul>
+              <li><strong>Multi-Workspace Organization:</strong> Separate environments for clients, departments, or ventures.</li>
+              <li><strong>Project Management:</strong> Milestones, deadlines, budgets, teams, and reporting.</li>
+              <li><strong>Task Management:</strong> Kanban workflows, priorities, assignments, and task views.</li>
+              <li><strong>Time Tracking:</strong> Timers, timesheets, approvals, and productivity reporting.</li>
+              <li><strong>Bug Tracking:</strong> Capture, classify, assign, and resolve issues with traceability.</li>
+              <li><strong>Financial Tools:</strong> Expenses, invoices, and profitability insight.</li>
+              <li><strong>Collaboration:</strong> Comments, files, mentions, notifications, and activity logs.</li>
+            </ul>
+
+            <h3>1.3 Who Should Use Taskiba?</h3>
+            <ul>
+              <li>Project managers, product teams, development teams, agencies</li>
+              <li>Consulting firms, freelancers, SMBs, remote/distributed teams</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 2. Registration and Login -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="registration-login" data-collapsible>
+          <header class="doc-section__header">
+            <h2>2. Registration and Login</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+
+          <div class="doc-section__body">
+            <h3>2.1 User Registration</h3>
+            <img class="image" src="taskiba_user_manual_files/Signup.png" alt="Signup">
+            <ol>
+              <li>Open your Taskiba sign up page.</li>
+              <li>Enter name, email address, password, and confirm password.</li>
+              <li>Accept terms/privacy and create account.</li>
+            </ol>
+
+            <h3>2.2 Email Verification</h3>
+            <ol>
+              <li>Check your inbox (and spam/junk) for the verification email.</li>
+              <li>Click the secure verification link to activate the account.</li>
+              <li>If expired, request a new verification email from the login screen.</li>
+            </ol>
+
+            <h3>2.3 Login</h3>
+            <img class="image" src="taskiba_user_manual_files/Login.png" alt="Login">
+            <ul>
+              <li>Use verified email + password to sign in.</li>
+              <li>If MFA/2FA is enabled (admin setting), complete the verification step.</li>
+            </ul>
+
+            <h3>2.4 Forgot Password</h3>
+            <img class="image" src="taskiba_user_manual_files/Forgot_password.png" alt="Forgot_password">
+            <ol>
+              <li>Click “Forgot Password”.</li>
+              <li>Enter your email to receive a reset link.</li>
+              <li>Set a new strong password and log in again.</li>
+            </ol>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 3. Workspaces -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="workspaces-management" data-collapsible>
+          <header class="doc-section__header">
+            <h2>3. Workspaces Management</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+
+          <div class="doc-section__body">
+            <h3>3.1 Understanding Workspaces</h3>
+            <p>
+              Workspaces are independent environments with their own projects, teams, settings, permissions, and financial preferences.
+              They’re ideal for separating clients, departments, or business lines.
+            </p>
+
+            <h3>3.2 Creating a New Workspace</h3>
+            <ol>
+              <li>Go to <strong>Workspaces</strong> from the sidebar.</li>
+              <li>Click <strong>Create Workspace</strong>.</li>
+              <li>Set workspace name and description, then create.</li>
+            </ol>
+
+            <h3>3.3 Managing Workspace Members</h3>
+            <h4>3.3.1 Invite Members</h4>
+            <ul>
+              <li>Go to <strong>Workspace Settings → Members</strong>.</li>
+              <li>Invite users by email, choose role, send invitation.</li>
+              <li>Track pending invites, resend, or cancel.</li>
+            </ul>
+
+            <h4>3.3.2 Roles and Permissions</h4>
+            <ul>
+              <li><strong>Owner:</strong> full control, billing, settings, members.</li>
+              <li><strong>Manager:</strong> manage projects, tasks, teams, reports.</li>
+              <li><strong>Member:</strong> do assigned work, track time, submit expenses.</li>
+              <li><strong>Client:</strong> restricted view of progress/deliverables.</li>
+            </ul>
+
+            <h3>3.4 Workspace Settings</h3>
+            <ul>
+              <li>Workspace information (name, description)</li>
+              <li>Default preferences (currency, date/time formats where applicable)</li>
+              <li>Permission controls and visibility policies</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 4. Project Management -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="project-management" data-collapsible>
+          <header class="doc-section__header">
+            <h2>4. Project Management</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+
+          <div class="doc-section__body">
+            <h3>4.1 Creating Projects</h3>
+            <ol>
+              <li>Open <strong>Projects</strong> → <strong>Create Project</strong>.</li>
+              <li>Enter project name, optional description, and visibility.</li>
+              <li>Set dates (start/deadline), estimated hours, and budget if needed.</li>
+              <li>Create the project.</li>
+            </ol>
+
+            <h3>4.2 Managing Project Team</h3>
+            <ul>
+              <li>Add members to the project team and assign roles (owner/manager/member/client visibility).</li>
+              <li>Remove users if needed; historical activity remains preserved.</li>
+            </ul>
+
+            <h3>4.3 Project Features</h3>
+            <ul>
+              <li>Milestones, tasks, time tracking and progress updates</li>
+              <li>Files, comments, and activity logs</li>
+              <li>Project dashboards and reports</li>
+            </ul>
+
+            <h3>4.4 Project Budget</h3>
+            <ul>
+              <li>Set planned budget (optional) to compare planned vs actual cost.</li>
+              <li>Track expenses, billable time, and invoice totals.</li>
+            </ul>
+
+            <h3>4.5 Project Activities & Tracking</h3>
+            <ul>
+              <li>Activity feed shows updates, changes, comments, and progress.</li>
+              <li>Use reports to monitor delivery, time usage, and cost.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 5. Task Management -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="task-management" data-collapsible>
+          <header class="doc-section__header">
+            <h2>5. Task Management</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+
+          <div class="doc-section__body">
+            <h3>5.1 Understanding Tasks</h3>
+            <p>
+              Tasks are actionable work items linked to projects. Tasks can be organized by stages (Kanban),
+              assigned to users, given priorities, deadlines, and tracked for progress.
+            </p>
+
+            <h3>5.2 Creating Tasks</h3>
+            <ol>
+              <li>Go to <strong>Tasks</strong> → <strong>Create Task</strong> (or create within a project).</li>
+              <li>Fill in title, description, project association, optional milestone.</li>
+              <li>Set priority, start/end dates, and assign members.</li>
+              <li>Create the task (it appears in the first workflow stage).</li>
+            </ol>
+
+            <h3>5.3 Managing Tasks</h3>
+            <ul>
+              <li><strong>View:</strong> details, progress, comments, files, history.</li>
+              <li><strong>Edit:</strong> update description, dates, priority, assignments.</li>
+              <li><strong>Move stages:</strong> drag-and-drop between workflow columns.</li>
+              <li><strong>Comments & mentions:</strong> collaborate and notify teammates.</li>
+            </ul>
+
+            <h3>5.4 Task Views</h3>
+            <ul>
+              <li><strong>Kanban:</strong> workflow board by stages</li>
+              <li><strong>List:</strong> sortable/filterable task list</li>
+              <li><strong>Calendar:</strong> view by due date</li>
+              <li><strong>My Tasks:</strong> focus on your assignments</li>
+            </ul>
+
+            <h3>5.5 Task Stages</h3>
+            <ul>
+              <li>Default stages typically include: To Do, In Progress, Review, Done.</li>
+              <li>Stages can be customized per workspace to match team workflows.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 6. Bug Tracking -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="bug-tracking" data-collapsible>
+          <header class="doc-section__header">
+            <h2>6. Bug Tracking</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+          <div class="doc-section__body">
+            <ul>
+              <li>Create bug reports with title, description, severity, and reproduction steps.</li>
+              <li>Assign bugs to team members and track status through resolution.</li>
+              <li>Link bugs to projects/milestones and keep history for auditing.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 7. Time Tracking & Timesheets -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="time-tracking" data-collapsible>
+          <header class="doc-section__header">
+            <h2>7. Time Tracking & Timesheets</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+          <div class="doc-section__body">
+            <h3>7.1 Timers</h3>
+            <ul>
+              <li>Start/stop timers on tasks to capture accurate work time.</li>
+              <li>Mark time as billable/non-billable.</li>
+            </ul>
+
+            <h3>7.2 Manual Time Entries</h3>
+            <ul>
+              <li>Add entries with date, project/task, duration, and notes.</li>
+              <li>Use copy/recurring entries for repeated activities.</li>
+            </ul>
+
+            <h3>7.3 Timesheets</h3>
+            <ul>
+              <li>Views: daily, weekly, monthly, calendar</li>
+              <li>Submit for approval (optional workflow): pending → approved/rejected</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 8. Expenses -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="expenses" data-collapsible>
+          <header class="doc-section__header">
+            <h2>8. Expense Management</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+          <div class="doc-section__body">
+            <ul>
+              <li>Create expenses with category, amount, date, and attachments.</li>
+              <li>Link expenses to projects for profitability and budgeting.</li>
+              <li>Approval workflows can be enabled depending on role policies.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 9. Invoices -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="invoices" data-collapsible>
+          <header class="doc-section__header">
+            <h2>9. Invoicing</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+          <div class="doc-section__body">
+            <ul>
+              <li>Create invoices from billable time and expenses.</li>
+              <li>Send to clients and track status (draft/sent/paid/overdue).</li>
+              <li>Support multiple payment methods depending on configuration.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 10. Reports -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="reports" data-collapsible>
+          <header class="doc-section__header">
+            <h2>10. Reporting & Analytics</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+          <div class="doc-section__body">
+            <ul>
+              <li>Project progress and milestone completion reports</li>
+              <li>Time and utilization (by member, project, date range)</li>
+              <li>Financial insights: budgets, expenses, invoice totals</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 11. Contact / Support -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="contact-support" data-collapsible>
+          <header class="doc-section__header">
+            <h2>11. Contact & Support</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+          <div class="doc-section__body">
+            <ul>
+              <li>Use the contact form (if enabled) to submit inquiries.</li>
+              <li>Admins can manage submissions, reply, archive, and track status.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 12. Currency -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="currency" data-collapsible>
+          <header class="doc-section__header">
+            <h2>12. Currency Management</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+          <div class="doc-section__body">
+            <ul>
+              <li>Set workspace/base currency and symbol formatting.</li>
+              <li>Ensure invoices, budgets, and expenses display consistently.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 13. Notifications -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="notifications" data-collapsible>
+          <header class="doc-section__header">
+            <h2>13. Notifications</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+          <div class="doc-section__body">
+            <ul>
+              <li>Configure alerts for assignments, comments, due dates, approvals, and billing events.</li>
+              <li>Use in-app + email notifications depending on settings.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 14. Roles & Permissions -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="roles-permissions" data-collapsible>
+          <header class="doc-section__header">
+            <h2>14. Roles & Permissions</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+          <div class="doc-section__body">
+            <ul>
+              <li>Define what each role can view/manage (workspace, projects, tasks, billing, system settings).</li>
+              <li>Enforce least-privilege access for security.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 15. Dashboard -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="dashboard" data-collapsible>
+          <header class="doc-section__header">
+            <h2>15. Dashboard</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+          <div class="doc-section__body">
+            <ul>
+              <li>Overview of projects, tasks, due items, activity, and workload.</li>
+              <li>Analytics widgets (progress, time usage, financial summaries).</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 16. Settings & Configuration -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="settings-configuration" data-collapsible>
+          <header class="doc-section__header">
+            <h2>16. Settings & Configuration</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+
+          <div class="doc-section__body">
+            <h3>16.1 Company Settings</h3>
+            <ul>
+              <li>Company profile, address, legal/billing info (as required).</li>
+              <li>Operational defaults (date/time, region where applicable).</li>
+            </ul>
+
+            <h3>16.2 Payment Configuration</h3>
+            <ul>
+              <li>Enable one or more payment gateways (based on your build).</li>
+              <li>Configure API keys securely and validate in sandbox/test mode first.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- 17. System Settings -->
+        <!-- ========================================================= -->
+        <section class="doc-section" id="system-settings" data-collapsible>
+          <header class="doc-section__header">
+            <h2>17. System Settings</h2>
+            <div class="doc-section__meta">
+              <button
+  class="iconbtn iconbtn--link"
+  data-copy-link
+  aria-label="Copy section link"
+  title="Copy link"
+>
+  <svg
+    class="copy-icon"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    aria-hidden="true"
+  >
+    <!-- Link icon -->
+    <path
+      class="icon-link"
+      d="M10 13a5 5 0 0 1 0-7l2-2a5 5 0 1 1 7 7l-1 1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      class="icon-link"
+      d="M14 11a5 5 0 0 1 0 7l-2 2a5 5 0 1 1-7-7l1-1"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <!-- Checkmark (success state) -->
+    <path
+      class="icon-check"
+      d="M6 12l4 4 8-8"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    </svg>
+</button>
+            </div>
+            <span class="sec-chevron" aria-hidden="true">
+            <svg class="sec-chevron__icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                class="chev"
+                d="M6 9l6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </span>
+          </header>
+
+          <div class="doc-section__body">
+            <h3>17.1 Brand Settings</h3>
+            <ul>
+              <li>Upload logo, set brand colors, and control UI identity.</li>
+              <li>Ensure email templates and PDFs match your brand.</li>
+            </ul>
+
+            <h3>17.2 Email Settings</h3>
+            <ul>
+              <li>Configure SMTP/provider settings.</li>
+              <li>Test sending to ensure deliverability.</li>
+            </ul>
+
+            <h3>17.3 Currency Settings</h3>
+            <ul>
+              <li>Global currency defaults and formatting rules for billing.</li>
+            </ul>
+
+            <h3>17.4 Payment Settings</h3>
+            <ul>
+              <li>Turn payment methods on/off, set invoice payment behavior.</li>
+            </ul>
+
+            <h3>17.5 Storage Settings</h3>
+            <ul>
+              <li>Select local vs S3-compatible storage depending on deployment needs.</li>
+              <li>Set upload limits and allowed file types.</li>
+            </ul>
+
+            <h3>17.6 ReCaptcha Settings</h3>
+            <ul>
+              <li>Enable captcha to reduce bot signups and abuse.</li>
+              <li>Store keys securely and test forms.</li>
+            </ul>
+
+            <h3>17.7 ChatGPT Integration</h3>
+            <ul>
+              <li>Enable AI assistance features (where included in your build).</li>
+              <li>Configure API key and usage limits for cost control.</li>
+            </ul>
+
+            <h3>17.8 SEO Settings</h3>
+            <ul>
+              <li>Configure metadata for public pages (if applicable).</li>
+            </ul>
+
+            <h3>17.9 Cache Settings</h3>
+            <ul>
+              <li>Manage caching for performance and clear cache when deploying updates.</li>
+            </ul>
+          </div>
+        </section>
+
+        <footer class="doc-footer">
+          <div class="callout">
+            <div class="callout__title">Tip</div>
+            <div class="callout__body">
+              Use <strong>Ctrl+K</strong> to search, or click any section title in the left menu to jump instantly.
+            </div>
+          </div>
+        </footer>
+      </article>
+    </main>
+  </div>
+
+  <script src="taskiba_user_manual_files/app.js"></script>
+</body>
+</html>

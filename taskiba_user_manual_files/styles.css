@@ -1,0 +1,999 @@
+:root{
+  --bg: #0b1220;
+  --panel: rgba(255,255,255,.06);
+  --panel2: rgba(255,255,255,.08);
+  --text: rgba(255,255,255,.92);
+  --muted: rgba(255,255,255,.66);
+  --border: rgba(255,255,255,.10);
+  --shadow: 0 10px 30px rgba(0,0,0,.28);
+  --brand: #7c5cff;
+  --brand2: #8B5CF6;
+  --danger: #ef4444;
+
+  --radius-xl: 18px;
+  --radius-lg: 14px;
+  --radius-md: 12px;
+
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+
+  --topbar-h: 0px;
+}
+
+html[data-theme="light"]{
+  --bg: #f6f7fb;
+  --panel: #ffffff;
+  --panel2: #f1f3fb;
+  --text: rgba(15, 23, 42, .95);
+  --muted: rgba(15, 23, 42, .65);
+  --border: rgba(15,23,42,.10);
+  --shadow: 0 10px 30px rgba(15,23,42,.10);
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+
+body{
+  margin:0;
+  font-family: var(--sans);
+  background: transparent; /* ✅ background moved to fixed layer */
+  color: var(--text);
+  position: relative;
+  min-height: 100%;
+  padding-top: var(--topbar-h);
+}
+
+body::before{
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background:
+    radial-gradient(1200px 800px at 20% 0%, rgba(124,92,255,.20), transparent 60%),
+    radial-gradient(900px 700px at 95% 15%, rgba(34,197,94,.14), transparent 55%),
+    var(--bg);
+}
+
+a{ color: inherit; text-decoration: none; }
+p{ line-height: 1.7; margin: .65rem 0; color: var(--text); }
+ul,ol{ margin: .6rem 0 .9rem 1.25rem; line-height: 1.7; }
+li{ margin: .2rem 0; }
+strong{ font-weight: 650; }
+
+.muted{ color: var(--muted); font-size: 12px; }
+
+/* Top bar */
+.topbar{
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9999;
+  backdrop-filter: blur(12px);
+  background: color-mix(in srgb, var(--bg) 60%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+.topbar__inner{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  display:flex;
+  align-items:center;
+  gap: 12px;
+}
+.topbar__actions{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.topbar__menu{ 
+  display:none !important; 
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width: 180px;
+  max-width: 100%;
+}
+.brand__logo{
+  height: 28px;   
+  width: auto;
+  display: none; /* controlled by theme */
+}
+/* Light theme */
+html[data-theme="light"] .brand__logo--light{
+  display: block;
+}
+
+/* Dark theme */
+html[data-theme="dark"] .brand__logo--dark{
+  display: block;
+}
+
+.brand__mark{
+  width: 38px;
+  height: 38px;
+  display:grid;
+  place-items:center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--brand), color-mix(in srgb, var(--brand) 40%, #000 60%));
+  color: #fff;
+  font-weight: 800;
+  box-shadow: var(--shadow);
+}
+.brand__text{ display:flex; flex-direction:column; line-height:1.05; }
+.brand__title{ font-weight: 800; letter-spacing:.2px; }
+.brand__subtitle{ font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+.image{
+  max-width: 100%;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+/* Buttons */
+.btn{
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--panel) 75%, transparent);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform .08s ease, background .2s ease, border-color .2s ease;
+}
+.btn:active{ transform: translateY(1px); }
+/* Primary button – normal */
+.btn--primary{
+  background: #8B5CF6;
+  border-color: transparent;
+  color: #ffffff;
+}
+
+/* Primary button – active */
+.btn--primary:active{
+  filter: brightness(0.95);
+}
+/* Base button */
+.btn,
+.btn--primary{
+  transition:
+    background-color .2s ease,
+    color .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+/* ---------- LIGHT MODE HOVER ---------- */
+html[data-theme="light"] .btn:hover,
+html[data-theme="light"] .btn--primary:hover{
+  background: #ffffff;
+  color: #6A4FDA;                 /* requested text color */
+  border-color: #8B5CF6;
+  /* box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, #fff 10%, transparent),
+    0 10px 22px rgba(0,0,0,.14); */
+}
+
+/* ---------- DARK MODE HOVER ---------- */
+html[data-theme="dark"] .btn:hover,
+html[data-theme="dark"] .btn--primary:hover{
+  background: #363B4A;             /* requested dark hover bg */
+  color: #ffffff;                  /* requested text color */
+  border-color: var(--border);
+}
+
+.iconbtn{
+  width: 40px;
+  height: 40px;
+  display:grid;
+  place-items:center;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--panel) 75%, transparent);
+  cursor:pointer;
+  transition: background .2s ease, transform .08s ease;
+}
+
+.iconbtn--all{
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid transparent;
+  display: grid;
+  background: color-mix(in srgb, var(--panel2) 70%, transparent);
+  border-color: var(--border);
+}
+
+.iconbtn--all:hover{
+  background: color-mix(in srgb, var(--panel2) 70%, transparent);
+  border-color: var(--border);
+}
+
+.alltoggle__icon{
+  color: var(--text);
+  transition: transform .18s ease;
+}
+
+/* =====================================================
+   Expand / Collapse ALL – Chevron direction fix
+   ===================================================== */
+
+/* Animate individual chevrons, not the whole SVG */
+.alltoggle__icon .chev{
+  transition: transform .18s ease;
+  transform-box: fill-box;     /* required for SVG transforms */
+  transform-origin: center;
+}
+
+/* When ALL sections are expanded → show "Collapse all" */
+.iconbtn--all.is-expanded .alltoggle__icon .chev{
+  transform: rotate(180deg);
+}
+
+
+@media (prefers-reduced-motion: reduce){
+  .alltoggle__icon{ transition: none !important; }
+}
+
+
+.iconbtn:hover{ background: color-mix(in srgb, var(--panel2) 88%, transparent); }
+.iconbtn:active{ transform: translateY(1px); }
+.icon{ font-size: 16px; }
+
+/* Search */
+.search{
+  position: relative;
+  width: min(520px, 42vw);
+}
+.search:hover{
+  border-radius: 999px;
+  /* box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, #fff 10%, transparent),
+    0 10px 22px rgba(0,0,0,.14); */
+}
+.search__icon{
+  position:absolute;
+  left: 14px;
+  /* top: 50%;
+  transform: translateY(-50%); */
+  color: var(--muted);
+  font-size: 24px;
+}
+.search__input{
+  width: 100%;
+  padding: 11px 84px 11px 36px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
+  color: var(--text);
+  outline: none;
+}
+.search__input::placeholder{ color: color-mix(in srgb, var(--muted) 85%, transparent); }
+.search__input:focus{
+  border-color: color-mix(in srgb, var(--brand) 70%, var(--border));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 22%, transparent);
+}
+.search__kbd{
+  position:absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--panel2) 60%, transparent);
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  border-radius: 8px;
+}
+
+/* Layout */
+.layout{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  display:grid;
+  grid-template-columns: 310px 1fr;
+  gap: 14px;
+  align-items:start;
+}
+
+/* Sidebar */
+.sidebar{
+  position: sticky;
+  top: 78px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+  overscroll-behavior: contain;
+  top: calc(var(--topbar-h) + 14px);
+}
+.sidebar__top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 14px 14px 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar__title{
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+.sidebar__close{ display:none; }
+.sidebar__footer{
+  padding: 12px 18px;
+  border-top: 1px solid var(--border);
+}
+
+.toc{
+  padding: 10px;
+  max-height: calc(100vh - 190px);
+  overflow:auto;
+}
+.toc a{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 12px;
+  color: var(--text);
+  border: 1px solid transparent;
+  transition: background .18s ease, border-color .18s ease;
+}
+.toc a:hover{
+  background: color-mix(in srgb, var(--panel2) 85%, transparent);
+  border-color: var(--border);
+}
+.toc a.active{
+  background: color-mix(in srgb, var(--brand) 16%, transparent);
+  border-color: color-mix(in srgb, var(--brand) 35%, var(--border));
+}
+.toc .toc__depth-2{ padding-left: 10px; font-size: 16px; font-weight: 500;}
+.toc .toc__depth-3{ padding-left: 26px; font-size: 14px; }
+.toc .toc__depth-4{ padding-left: 38px; font-size: 12px; color: var(--muted); }
+
+/* Main */
+.main{
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: color-mix(in srgb, var(--panel) 86%, transparent);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+.hero{
+  padding: 22px 20px;
+  border-bottom: 1px solid var(--border);
+  /* background:
+    radial-gradient(700px 260px at 10% 0%, color-mix(in srgb, var(--brand) 35%, transparent), transparent 60%),
+    radial-gradient(700px 260px at 90% 0%, color-mix(in srgb, var(--brand2) 22%, transparent), transparent 60%),
+    color-mix(in srgb, var(--panel) 90%, transparent); */
+}
+.hero__title{ margin:0; font-size: 30px; letter-spacing: -.3px; color: var(--hero-title);}
+.hero__lead{ max-width: 780px;  margin-top: 8px; }
+.hero__chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top: 14px; }
+.chip{
+  display:inline-flex;
+  align-items:center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: color-mix(in srgb, var(--panel2) 60%, transparent);
+  font-size: 12px;
+  font-weight: 650;
+}
+html[data-theme="light"]{
+  --hero-title: #8B5CF6;
+}
+
+html[data-theme="dark"]{
+  --hero-title: #ffffff;
+}
+
+/* Hero CTA layout */
+.hero__cta{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Push expand/collapse to the right */
+.hero__cta-actions{
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+/* Doc content */
+.doc{ padding: 16px 20px 24px 20px; }
+.doc h2{ margin: 0; font-size: 18px; letter-spacing: -.2px; font-weight: 650;}
+.doc h3{ margin: 16px 0 6px; font-size: 16px; font-weight: 650;}
+.doc h4{ margin: 14px 0 6px; font-size: 14px; color: color-mix(in srgb, var(--text) 85%, var(--muted)); }
+.doc code{
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--panel2) 65%, transparent);
+}
+
+/* Sections */
+.doc-section{
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  margin: 12px 0;
+  overflow:hidden;
+}
+.doc-section__header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap: 12px;
+  padding: 14px 14px 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.doc-section__meta{ display:flex; align-items:center; gap: 8px; }
+.doc-section__body{
+  padding: 12px 14px 14px 14px;
+}
+.toggle, .linkbtn{
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--panel2) 65%, transparent);
+  color: var(--text);
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor:pointer;
+}
+.toggle:hover, .linkbtn:hover{ filter: brightness(1.03); }
+
+.doc-section[data-collapsed="true"] .doc-section__body{
+  display:none;
+}
+
+/* =========================
+    Section header chevron
+    ========================= */
+.doc-section__header{
+  position: relative;
+  padding-right: 44px;
+}
+
+.sec-chevron{
+  position: absolute;
+  right: 14px;
+  top: 50%;
+
+  /* REPLACE: don't rotate the container */
+  transform: translateY(-50%);
+
+  transform-origin: 50% 50%;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+
+  color: color-mix(in srgb, var(--text) 70%, var(--muted));
+  pointer-events: none;
+  background: transparent;
+
+  /* REPLACE: no transform transition needed on container now */
+  transition:
+    background .18s ease,
+    color .18s ease;
+}
+
+/* Flip only the chevron path (like topbar) */
+.sec-chevron__icon .chev{
+  transition: transform .22s cubic-bezier(.2,.8,.2,1);
+  transform-box: fill-box;
+  transform-origin: center;
+
+  /* Expanded by default => show UP */
+  transform: rotate(180deg);
+}
+
+/* Collapsed => show DOWN */
+.doc-section[data-collapsed="true"] .sec-chevron__icon .chev{
+  transform: rotate(0deg);
+}
+
+.doc-section[data-collapsed="true"] .sec-chevron{
+  color: var(--muted);
+}
+
+
+/* Optional hover polish */
+.doc-section__header:hover .sec-chevron{
+  background: color-mix(in srgb, var(--panel2) 35%, transparent);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .sec-chevron{
+    transition: none !important;
+  }
+}
+
+/* Footer callout */
+.doc-footer{ padding-top: 10px; }
+.callout{
+  border: 1px solid color-mix(in srgb, var(--brand) 35%, var(--border));
+  background: color-mix(in srgb, var(--brand) 12%, transparent);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+}
+.callout__title{ font-weight: 900; letter-spacing: .2px; }
+.callout__body{ color: var(--muted); margin-top: 6px; }
+
+/* Backdrop + mobile drawer */
+.backdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 40;
+}
+
+/* Responsive */
+@media (max-width: 980px){
+  .layout{ grid-template-columns: 1fr; }
+  .topbar__menu{ display:grid !important; }
+  .search{ display:none; }
+  .sidebar{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(92vw, 360px);
+    z-index: 50;
+    border-radius: 0 18px 18px 0;
+    transform: translateX(-105%);
+    transition: transform .22s ease;
+  }
+  .sidebar.open{ transform: translateX(0); }
+  .sidebar__close{ display:grid; }
+    .brand__logo{
+    height: 22px;
+  }
+}
+
+/* Print */
+@media print{
+  .topbar, .sidebar, .hero__cta, .doc-section__meta { display:none !important; }
+  body{ background:#fff; color:#000; }
+  .layout{ display:block; }
+  .main{ box-shadow:none; border: none; }
+  .doc-section{ break-inside: avoid; }
+}
+
+/* Default: page scrolls */
+html, body{
+  height: 100%;
+}
+
+/* When drawer is open */
+html.no-scroll,
+body.no-scroll{
+  overflow: hidden !important;
+  position: fixed;
+  width: 100%;
+}
+
+/* ✅ Anchor jumps should account for the fixed header */
+.doc-section,
+.doc h2, .doc h3, .doc h4{
+  scroll-margin-top: calc(var(--topbar-h) + 16px);
+}
+
+/* =========================
+   Search highlight (mark)
+   ========================= */
+
+mark{
+  padding: 2px 1px;
+  border-radius: 6px;
+  font-weight: 650;
+  background: color-mix(in srgb, var(--brand) 25%, transparent);
+  color: inherit;
+  animation: markFade .15s ease-out;
+}
+
+/* Light mode */
+html[data-theme="light"] mark{
+  background: color-mix(in srgb, #6A4FDA 22%, #ffffff 78%);
+  color: #1e1b4b; /* readable on light bg */
+}
+
+/* Dark mode */
+html[data-theme="dark"] mark{
+  background: color-mix(in srgb, var(--brand) 35%, transparent);
+  color: #ffffff;
+}
+
+/* Optional: when highlight is inside links */
+a mark{
+  color: inherit;
+}
+
+/* Optional: subtle glow in dark mode */
+html[data-theme="dark"] mark{
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand) 55%, transparent);
+}
+
+@keyframes markFade{
+  from{ background-color: transparent; }
+  to{ }
+}
+
+/* Make the whole section header clickable */
+.doc-section__header{
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Ensure buttons inside header remain interactive */
+.doc-section__header .linkbtn{
+  cursor: pointer;
+  user-select: auto;
+}
+
+/* Optional: small hover feedback */
+.doc-section__header:hover{
+  background: color-mix(in srgb, var(--panel2) 35%, transparent);
+}
+
+/* =========================
+   Copy link button (theme-flexible)
+   ========================= */
+.iconbtn--link{
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--muted);
+  opacity: 0;
+  pointer-events: none;
+
+  transition:
+    opacity .15s ease,
+    background-color .15s ease,
+    border-color .15s ease,
+    color .15s ease;
+}
+
+/* Show on section header hover */
+.doc-section__header:hover .iconbtn--link{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Keyboard accessibility */
+.iconbtn--link:focus-visible{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Hover feedback — adaptive */
+.iconbtn--link:hover{
+  background: color-mix(in srgb, var(--panel2) 85%, transparent);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+
+/* Keep it aligned */
+.doc-section__meta{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .iconbtn--link{
+    transition: none;
+  }
+}
+
+/* =========================
+   Copy icon states (final)
+   ========================= */
+
+/* Default: show link, hide check */
+.copy-icon .icon-link{
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  transform-origin: center;
+}
+
+.copy-icon .icon-check{
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.6);
+  transform-origin: center;
+}
+
+/* Success: hide link, show check */
+.iconbtn--link.is-copied .icon-link{
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.6);
+}
+
+.iconbtn--link.is-copied .icon-check{
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+/* Micro animation */
+.copy-icon .icon-link,
+.copy-icon .icon-check{
+  transition: opacity .15s ease, transform .15s ease;
+}
+
+/* Success color */
+.iconbtn--link.is-copied{
+  color: var(--brand);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .copy-icon .icon-link,
+  .copy-icon .icon-check{
+    transition: none !important;
+  }
+}
+
+/* =========================
+   Copy tooltip
+   ========================= */
+
+.copy-tooltip{
+  position: absolute;
+  z-index: 10000;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+  background: var(--panel2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition:
+    opacity .15s ease,
+    transform .15s ease;
+}
+
+.copy-tooltip.show{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .copy-tooltip{
+    transition: none;
+  }
+}
+
+/* Light mode: slightly crisper */
+html[data-theme="light"] .iconbtn--link:hover{
+  background: #ffffff;
+}
+
+/* Dark mode: softer glow */
+html[data-theme="dark"] .iconbtn--link:hover{
+  background: color-mix(in srgb, var(--panel2) 90%, transparent);
+}
+
+/* =========================
+   Modern scrollbars (page)
+   ========================= */
+
+/* Firefox */
+html{
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--muted) 45%, transparent) transparent;
+}
+
+/* Chrome / Edge / Safari */
+html::-webkit-scrollbar{
+  width: 10px;
+}
+
+html::-webkit-scrollbar-track{
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb{
+  background: color-mix(in srgb, var(--muted) 35%, transparent);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+html::-webkit-scrollbar-thumb:hover{
+  background: color-mix(in srgb, var(--muted) 55%, transparent);
+}
+/* =========================
+   Auto-hide TOC scrollbar (solid brand colors)
+   ========================= */
+
+/* ---------- Firefox ---------- */
+.toc{
+  scrollbar-width: none; /* hidden by default */
+}
+
+.toc:hover,
+.toc:focus-within{
+  scrollbar-width: thin;
+  scrollbar-color: #d0c6fb transparent;
+}
+
+/* ---------- Chrome / Edge / Safari ---------- */
+.toc::-webkit-scrollbar{
+  width: 0px;            /* hidden */
+  transition: width .15s ease;
+}
+
+.toc:hover::-webkit-scrollbar,
+.toc:focus-within::-webkit-scrollbar{
+  width: 8px;            /* visible on hover */
+}
+
+/* Track */
+.toc::-webkit-scrollbar-track{
+  background: transparent;
+}
+
+/* Thumb – default (light mode) */
+.toc::-webkit-scrollbar-thumb{
+  background: #8B5CF6;   /* reversed: strong by default */
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+  transition: background .15s ease;
+}
+
+/* Thumb – hover (light mode) */
+.toc::-webkit-scrollbar-thumb:hover{
+  background: #d0c6fb;   /* reversed hover */
+  background-clip: content-box;
+}
+
+/* ---------- Dark mode tuning ---------- */
+html[data-theme="dark"] .toc::-webkit-scrollbar-thumb{
+  background: color-mix(in srgb, #8B5CF6 65%, transparent);
+}
+
+html[data-theme="dark"] .toc::-webkit-scrollbar-thumb:hover{
+  background: #d0c6fb;
+}
+/* =========================
+   Theme switch (iOS style)
+   ========================= */
+
+.theme-switch{
+  --h: 32px;
+  --w: 56px;
+  --pad: 2px;
+  --knob: calc(var(--h) - (var(--pad) * 2));
+
+  width: var(--w);
+  height: var(--h);
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+
+  /* iOS-like track */
+  background: #E5E7EB;            /* light gray track */
+  box-shadow: inset 0 0 0 1px rgba(15,23,42,.08);
+  transition: background .18s ease, box-shadow .18s ease;
+}
+
+/* Dark theme track */
+html[data-theme="dark"] .theme-switch{
+  background: rgba(255,255,255,.18); /* soft dark track */
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.14);
+}
+
+/* Focus ring */
+.theme-switch:focus-visible{
+  outline: none;
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--brand) 25%, transparent),
+    inset 0 0 0 1px rgba(15,23,42,.08);
+}
+
+/* Knob */
+.theme-switch__knob{
+  width: var(--knob);
+  height: var(--knob);
+  border-radius: 999px;
+  position: absolute;
+  left: var(--pad);
+  top: var(--pad);
+
+  background: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,.18),
+    0 6px 12px rgba(0,0,0,.10);
+  display: grid;
+  place-items: center;
+
+  transform: translateX(0);
+  transition: transform .20s ease;
+}
+
+/* Slide knob when dark */
+html[data-theme="dark"] .theme-switch__knob{
+  transform: translateX(calc(var(--w) - var(--knob) - (var(--pad) * 2)));
+}
+
+/* Icons inside knob */
+.theme-switch__icon{
+  width: 16px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  color: rgba(15,23,42,.72); /* default icon color */
+  transition: opacity .12s ease, transform .12s ease;
+}
+
+/* In dark theme, icon color slightly brighter */
+html[data-theme="dark"] .theme-switch__icon{
+  color: rgba(255,255,255,.85);
+}
+
+/* Light theme: show sun */
+html[data-theme="light"] .theme-switch__icon--sun{ opacity: 1; transform: scale(1); }
+html[data-theme="light"] .theme-switch__icon--moon{ opacity: 0; transform: scale(.85); }
+
+/* Dark theme: show moon */
+html[data-theme="dark"] .theme-switch__icon--sun{ opacity: 0; transform: scale(.85); }
+html[data-theme="dark"] .theme-switch__icon--moon{ opacity: 1; transform: scale(1); }
+
+/* Optional: tiny hover feedback */
+.theme-switch:hover{
+  filter: brightness(0.99);
+}
+html[data-theme="dark"] .theme-switch__knob{
+  color: rgba(15,23,42,.78);   /* icon color inside knob */
+}
+
+html[data-theme="dark"] .theme-switch__icon{
+  color: inherit;              /* use knob color */
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .theme-switch,
+  .theme-switch__knob,
+  .theme-switch__icon{
+    transition: none !important;
+  }
+}
+
+/* =========================
+   End of Taskiba Manual CSS
+   ========================= */
