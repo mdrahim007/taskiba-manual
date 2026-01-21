@@ -1,4 +1,4 @@
-/* Taskiba Manual – App JS (no dependencies) */
+/* Taskiba Manual App JS (no dependencies) */
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -13,7 +13,7 @@ function setYear() {
 }
 
 function getThemePreference() {
-  const saved = localStorage.getItem("taskiba_docs_theme"); // "light" | "dark"
+  const saved = localStorage.getItem("taskiba_docs_theme");
   if (saved === "light" || saved === "dark") return saved;
 
   const prefersDark =
@@ -23,8 +23,8 @@ function getThemePreference() {
 
 function applyTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
-  // const icon = $("#themeIcon");
-  // if (icon) icon.textContent = theme === "dark" ? "☀️" : "🌙";
+  const btn = $("#btnTheme");
+  if (btn) btn.setAttribute("aria-checked", String(theme === "dark"));
 }
 
 function toggleTheme() {
@@ -45,28 +45,46 @@ function slugify(text) {
 }
 
 function ensureHeadingIds() {
-  const headings = $$('article.doc h2, article.doc h3, article.doc h4');
-  headings.forEach(h => {
-    if (!h.id) {
-      const section = h.closest('.doc-section');
+  const headings = $$("article.doc h2, article.doc h3, article.doc h4");
+  const used = new Set(
+    $$("[id]")
+      .map((el) => el.id)
+      .filter(Boolean)
+  );
 
-      // ✅ Make H2 id exactly equal to its section id (stable + accurate tracking)
-      if (section && section.id && h.tagName.toLowerCase() === 'h2') {
-        h.id = section.id;
-      } else {
-        h.id = slugify(h.textContent);
-      }
+  const ensureUnique = (base) => {
+    const safeBase = base || "section";
+    let id = safeBase;
+    let i = 2;
+    while (used.has(id)) {
+      id = `${safeBase}-${i++}`;
     }
+    used.add(id);
+    return id;
+  };
+
+  headings.forEach((heading) => {
+    if (heading.id) {
+      used.add(heading.id);
+      return;
+    }
+
+    const section = heading.closest(".doc-section");
+    if (section && section.id && heading.tagName.toLowerCase() === "h2") {
+      heading.id = ensureUnique(`${section.id}-title`);
+      return;
+    }
+
+    heading.id = ensureUnique(slugify(heading.textContent));
   });
 }
-
 
 function syncTopbarHeight() {
   const topbar = document.querySelector(".topbar");
   if (!topbar) return;
 
-  const h = Math.ceil(topbar.getBoundingClientRect().height);
-  document.documentElement.style.setProperty("--topbar-h", `${h}px`);
+  const height = Math.ceil(topbar.getBoundingClientRect().height);
+  document.documentElement.style.setProperty("--topbar-h", `${height}px`);
 }
 
 function prefersReducedMotion() {
@@ -82,7 +100,6 @@ function expandParentSectionFor(el) {
 
   if (section.getAttribute("data-collapsed") === "true") {
     section.setAttribute("data-collapsed", "false");
-
     const header = $(".doc-section__header", section);
     if (header) header.setAttribute("aria-expanded", "true");
   }
@@ -100,77 +117,68 @@ function expandFromHash() {
   expandParentSectionFor(target);
 }
 
-
 /* ---------------------------
    TOC (build + active state)
 --------------------------- */
 
 function buildTOC() {
-  const toc = $('#toc');
-  const doc = $('#doc');
+  const toc = $("#toc");
+  const doc = $("#doc");
   if (!toc || !doc) return;
 
-  toc.innerHTML = '';
+  toc.innerHTML = "";
 
-  // TOC from h2/h3
-  const headings = $$('h2, h3', doc);
+  const headings = $$("h2, h3", doc);
 
-  headings.forEach(h => {
-    const tag = h.tagName.toLowerCase();
-    const text = h.textContent.trim();
+  headings.forEach((heading) => {
+    const tag = heading.tagName.toLowerCase();
+    const text = heading.textContent.trim();
+    const section = heading.closest(".doc-section");
+    const targetId =
+      tag === "h2" && section?.id ? section.id : heading.id;
+    if (!targetId) return;
 
-    const a = document.createElement('a');
-    a.href = `#${h.id}`;
-    a.className = tag === 'h3' ? 'toc__depth-3' : 'toc__depth-2';
-    a.innerHTML = `<span class="dot">•</span><span>${text}</span>`;
+    const link = document.createElement("a");
+    link.href = `#${targetId}`;
+    link.className = tag === "h3" ? "toc__depth-3" : "toc__depth-2";
+    link.innerHTML = `<span class="dot" aria-hidden="true"></span><span>${text}</span>`;
 
-    a.addEventListener("click", (e) => {
-  e.preventDefault();
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
 
-  const id = a.getAttribute("href")?.slice(1);
-  const target = id ? document.getElementById(id) : null;
-  if (!target) return;
+      const id = link.getAttribute("href")?.slice(1);
+      const target = id ? document.getElementById(id) : null;
+      if (!target) return;
 
-  // ✅ Expand parent section first
-  expandParentSectionFor(target);
+      expandParentSectionFor(target);
+      closeDrawer();
 
-  // Close drawer (mobile)
-  closeDrawer();
+      const reduceMotion = prefersReducedMotion();
+      target.scrollIntoView({
+        behavior: reduceMotion ? "auto" : "smooth",
+        block: "start",
+      });
 
-  // ✅ Scroll to the heading (standard docs behavior)
-  const reduce = prefersReducedMotion();
-  target.scrollIntoView({
-    behavior: reduce ? "auto" : "smooth",
-    block: "start",
-  });
+      history.pushState(null, "", `#${id}`);
+    });
 
-  // ✅ Update URL hash without jumping again
-  history.pushState(null, "", `#${id}`);
-});
-
-    toc.appendChild(a);
+    toc.appendChild(link);
   });
 }
 
-//auto scroll TOC active item into view
 function scrollTOCItemIntoView(activeLink) {
   const toc = document.getElementById("toc");
   if (!toc || !activeLink) return;
 
   const tocRect = toc.getBoundingClientRect();
   const linkRect = activeLink.getBoundingClientRect();
-
   const padding = 12;
 
   const linkAbove = linkRect.top < tocRect.top + padding;
   const linkBelow = linkRect.bottom > tocRect.bottom - padding;
-
   if (!linkAbove && !linkBelow) return;
 
-  const reduceMotion =
-    window.matchMedia &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
+  const reduceMotion = prefersReducedMotion();
   activeLink.scrollIntoView({
     block: "nearest",
     inline: "nearest",
@@ -178,55 +186,45 @@ function scrollTOCItemIntoView(activeLink) {
   });
 }
 
-
-
 function setupActiveTOC() {
   const links = $$("#toc a");
   if (!links.length) return;
 
-  // Map TOC links -> target heading elements
   const items = links
-    .map((a) => {
-      const id = a.getAttribute("href")?.slice(1);
+    .map((link) => {
+      const id = link.getAttribute("href")?.slice(1);
       const el = id ? document.getElementById(id) : null;
-      return el ? { a, el } : null;
+      return el ? { link, el } : null;
     })
     .filter(Boolean);
 
   if (!items.length) return;
 
-const setActive = (a) => {
-  links.forEach((l) => l.classList.remove("active"));
-  if (a) {
-    a.classList.add("active");
-    scrollTOCItemIntoView(a);
-  }
-};
+  const setActive = (link) => {
+    links.forEach((item) => item.classList.remove("active"));
+    if (link) {
+      link.classList.add("active");
+      scrollTOCItemIntoView(link);
+    }
+  };
 
-
-
-  // Read your fixed header height from CSS var
   function headerOffsetPx() {
     const cssVal = getComputedStyle(document.documentElement)
       .getPropertyValue("--topbar-h")
       .trim();
-    const h = parseFloat(cssVal || "0");
-    // +16 matches your CSS scroll-margin-top: calc(var(--topbar-h) + 16px)
-    return (Number.isFinite(h) ? h : 0) + 16;
+    const height = parseFloat(cssVal || "0");
+    return (Number.isFinite(height) ? height : 0) + 16;
   }
 
   function computeActive() {
     const offset = headerOffsetPx();
-
-    // Choose the LAST heading that is above the activation line (serial order)
-    let current = items[0].a;
+    let current = items[0].link;
 
     for (const item of items) {
       const top = item.el.getBoundingClientRect().top;
       if (top - offset <= 2) {
-        current = item.a;
+        current = item.link;
       } else {
-        // ✅ IMPORTANT: break keeps serial behavior and prevents skipping H3 near H2
         break;
       }
     }
@@ -234,7 +232,6 @@ const setActive = (a) => {
     setActive(current);
   }
 
-  // rAF-throttled scroll tracking
   let ticking = false;
   const onScroll = () => {
     if (ticking) return;
@@ -247,23 +244,22 @@ const setActive = (a) => {
 
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll);
+  window.addEventListener("hashchange", () => setTimeout(computeActive, 0));
 
-  // Update after clicking TOC / direct hash navigation
-  window.addEventListener("hashchange", () => {
-    setTimeout(computeActive, 0);
-  });
-
-  // Initial
   computeActive();
 }
 
+/* ---------------------------
+   Collapsibles
+--------------------------- */
 
 function setupCollapsibles() {
-  const sections = $$("[data-collapsible]");
+  const sections = $$('[data-collapsible]');
   const toggleAllBtn = $("#btnToggleAll");
+  let statusTooltipTimer;
 
   function isAllExpanded() {
-    return sections.every((s) => s.getAttribute("data-collapsed") !== "true");
+    return sections.every((section) => section.getAttribute("data-collapsed") !== "true");
   }
 
   function updateToggleAllUI() {
@@ -271,8 +267,24 @@ function setupCollapsibles() {
 
     const expanded = isAllExpanded();
     toggleAllBtn.classList.toggle("is-expanded", expanded);
-    toggleAllBtn.setAttribute("aria-label", expanded ? "Collapse all sections" : "Expand all sections");
+    toggleAllBtn.setAttribute(
+      "aria-label",
+      expanded ? "Collapse all sections" : "Expand all sections"
+    );
     toggleAllBtn.setAttribute("title", expanded ? "Collapse all" : "Expand all");
+    toggleAllBtn.setAttribute("data-label", expanded ? "Collapse all" : "Expand all");
+    toggleAllBtn.setAttribute("data-tooltip", expanded ? "Collapse all" : "Expand all");
+  }
+
+  function flashToggleAllStatus(message) {
+    if (!toggleAllBtn) return;
+    clearTimeout(statusTooltipTimer);
+    toggleAllBtn.setAttribute("data-tooltip", message);
+    toggleAllBtn.classList.add("is-tooltip-visible");
+    statusTooltipTimer = setTimeout(() => {
+      toggleAllBtn.classList.remove("is-tooltip-visible");
+      updateToggleAllUI();
+    }, 1000);
   }
 
   function setSection(section, expand) {
@@ -281,46 +293,56 @@ function setupCollapsibles() {
     if (header) header.setAttribute("aria-expanded", expand ? "true" : "false");
   }
 
-  // Per section toggle
   sections.forEach((section) => {
     const header = $(".doc-section__header", section);
+    const body = $(".doc-section__body", section);
     if (!header) return;
 
     const collapsed = section.getAttribute("data-collapsed") === "true";
     header.setAttribute("role", "button");
     header.setAttribute("tabindex", "0");
     header.setAttribute("aria-expanded", collapsed ? "false" : "true");
+    if (body) {
+      if (!body.id) {
+        body.id = `${section.id || "section"}-body`;
+      }
+      header.setAttribute("aria-controls", body.id);
+    }
 
     const toggle = () => {
       const isCollapsed = section.getAttribute("data-collapsed") === "true";
-      setSection(section, isCollapsed); // if collapsed -> expand
+      setSection(section, isCollapsed);
       updateToggleAllUI();
     };
 
     header.addEventListener("click", (e) => {
-      // don't toggle when clicking interactive elements in header (copy link etc.)
       if (e.target.closest("button, a, [data-copy-link]")) return;
+      if (header.dataset.longpress === "true") {
+        delete header.dataset.longpress;
+        return;
+      }
       toggle();
     });
 
     header.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        if (document.activeElement?.closest("button, a, [data-copy-link]")) return;
-        e.preventDefault();
-        toggle();
-      }
+      if (e.key !== "Enter" && e.key !== " ") return;
+      if (document.activeElement?.closest("button, a, [data-copy-link]")) return;
+      e.preventDefault();
+      toggle();
     });
   });
 
-  // Global toggle all
   toggleAllBtn?.addEventListener("click", (e) => {
     e.preventDefault();
     const expand = !isAllExpanded();
-    sections.forEach((s) => setSection(s, expand));
+    sections.forEach((section) => setSection(section, expand));
     updateToggleAllUI();
+    flashToggleAllStatus(expand ? "Expanded all" : "Collapsed all");
+    if (window.innerWidth <= 980) {
+      closeDrawer();
+    }
   });
 
-  // Initial sync
   updateToggleAllUI();
 }
 
@@ -343,25 +365,34 @@ async function copyToClipboard(text) {
   }
 }
 
-function setupCopyLinks() {
-  const buttons = $$("[data-copy-link]");
-  let tooltip;
-  let activeCopiedBtn = null; // ✅ track last copied button
-
-  function showTooltip(x, y, text = "Copied!") {
-    if (!tooltip) {
-      tooltip = document.createElement("div");
-      tooltip.className = "copy-tooltip";
-      document.body.appendChild(tooltip);
-    }
-
-    tooltip.textContent = text;
-    tooltip.style.left = x + "px";
-    tooltip.style.top = y + "px";
-    tooltip.classList.add("show");
-
-    setTimeout(() => tooltip.classList.remove("show"), 900);
+let copyTooltip;
+function showCopyTooltip(x, y, text = "Copied!") {
+  if (!copyTooltip) {
+    copyTooltip = document.createElement("div");
+    copyTooltip.className = "copy-tooltip";
+    document.body.appendChild(copyTooltip);
   }
+
+  copyTooltip.textContent = text;
+  copyTooltip.style.left = `${x}px`;
+  copyTooltip.style.top = `${y}px`;
+  copyTooltip.classList.add("show");
+
+  setTimeout(() => copyTooltip.classList.remove("show"), 900);
+}
+
+async function copySectionLink(section, x, y) {
+  if (!section?.id) return false;
+  const url = `${location.origin}${location.pathname}#${section.id}`;
+  const ok = await copyToClipboard(url);
+  if (!ok) return false;
+  showCopyTooltip(x, y);
+  return true;
+}
+
+function setupCopyLinks() {
+  const buttons = $$('[data-copy-link]');
+  let activeCopiedBtn = null;
 
   function resetCopied(btn) {
     if (!btn) return;
@@ -369,57 +400,96 @@ function setupCopyLinks() {
   }
 
   buttons.forEach((btn) => {
-  btn.addEventListener("click", async (e) => {
-    e.stopPropagation(); // prevent section toggle
+    btn.addEventListener("click", async (e) => {
+      e.stopPropagation();
 
-    const section = btn.closest(".doc-section");
-    if (!section?.id) return;
+      const section = btn.closest(".doc-section");
+      if (!section?.id) return;
 
-    const url = `${location.origin}${location.pathname}#${section.id}`;
-    const ok = await copyToClipboard(url);
-    if (!ok) return;
+      const ok = await copySectionLink(section, e.pageX + 10, e.pageY - 10);
+      if (!ok) return;
 
-    // ✅ Reset previous copied icon
-    if (activeCopiedBtn && activeCopiedBtn !== btn) {
-      resetCopied(activeCopiedBtn);
-    }
-
-    // ✅ Set new copied icon
-    btn.classList.add("is-copied");
-    activeCopiedBtn = btn;
-
-    // Tooltip near cursor
-    showTooltip(e.pageX + 10, e.pageY - 10);
-
-    // ✅ Auto-reset after delay
-    setTimeout(() => {
-      resetCopied(btn);
-      if (activeCopiedBtn === btn) {
-        activeCopiedBtn = null;
+      if (activeCopiedBtn && activeCopiedBtn !== btn) {
+        resetCopied(activeCopiedBtn);
       }
-    }, 1200);
 
-    // ✅ IMPORTANT: remove focus so the icon hides again naturally
-    btn.blur();
+      btn.classList.add("is-copied");
+      activeCopiedBtn = btn;
+
+      setTimeout(() => {
+        resetCopied(btn);
+        if (activeCopiedBtn === btn) {
+          activeCopiedBtn = null;
+        }
+      }, 1200);
+
+      btn.blur();
+    });
   });
-});
 }
 
+function setupHeaderLongPressCopy() {
+  const headers = $$(".doc-section__header");
+  headers.forEach((header) => {
+    let timer = null;
+    let startX = 0;
+    let startY = 0;
 
+    const section = header.closest(".doc-section");
+
+    const clear = () => {
+      if (!timer) return;
+      clearTimeout(timer);
+      timer = null;
+    };
+
+    header.addEventListener(
+      "pointerdown",
+      (e) => {
+        if (window.innerWidth > 720) return;
+        if (e.button !== 0) return;
+        if (e.target.closest("button, a, [data-copy-link]")) return;
+
+        startX = e.clientX;
+        startY = e.clientY;
+
+        timer = setTimeout(async () => {
+          const ok = await copySectionLink(section, e.pageX + 10, e.pageY - 10);
+          if (ok) {
+            header.dataset.longpress = "true";
+            setTimeout(() => {
+              delete header.dataset.longpress;
+            }, 300);
+          }
+        }, 600);
+      },
+      { passive: true }
+    );
+
+    header.addEventListener("pointermove", (e) => {
+      if (!timer) return;
+      const dx = Math.abs(e.clientX - startX);
+      const dy = Math.abs(e.clientY - startY);
+      if (dx > 10 || dy > 10) clear();
+    });
+
+    header.addEventListener("pointerup", clear);
+    header.addEventListener("pointerleave", clear);
+    header.addEventListener("pointercancel", clear);
+  });
+}
 
 /* ---------------------------
    Search + highlighting
 --------------------------- */
 
-// Store original HTML so we can restore after removing highlights
-const __originalHTML = new WeakMap();
+const originalHTML = new WeakMap();
 
 function escapeRegExp(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function collectHighlightTargets(section) {
-  // Keep it practical: highlight within readable content only
   return $$("h2, h3, h4, p, li", section);
 }
 
@@ -427,9 +497,9 @@ function clearHighlights(sections) {
   sections.forEach((section) => {
     const nodes = collectHighlightTargets(section);
     nodes.forEach((el) => {
-      const original = __originalHTML.get(el);
+      const original = originalHTML.get(el);
       if (original != null) el.innerHTML = original;
-      __originalHTML.delete(el);
+      originalHTML.delete(el);
     });
   });
 }
@@ -441,86 +511,120 @@ function highlightInSection(section, query) {
   const nodes = collectHighlightTargets(section);
 
   nodes.forEach((el) => {
-    // Save original once
-    if (!__originalHTML.has(el)) __originalHTML.set(el, el.innerHTML);
+    if (!originalHTML.has(el)) originalHTML.set(el, el.innerHTML);
+    const walker = document.createTreeWalker(
+      el,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode(node) {
+          if (!node.nodeValue || !node.nodeValue.trim()) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          if (node.parentElement?.closest("mark")) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return NodeFilter.FILTER_ACCEPT;
+        },
+      }
+    );
 
-    // Only operate on text nodes by rewriting innerHTML (safe enough for this static doc)
-    // If the element already contains mark tags from previous query, restoring via map handles it.
-    el.innerHTML = el.innerHTML.replace(re, "<mark>$1</mark>");
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+    textNodes.forEach((textNode) => {
+      const text = textNode.nodeValue;
+      if (!text) return;
+
+      const hasMatch = re.test(text);
+      re.lastIndex = 0;
+      if (!hasMatch) return;
+
+      const fragment = document.createDocumentFragment();
+      let lastIndex = 0;
+
+      text.replace(re, (match, _group, offset) => {
+        const before = text.slice(lastIndex, offset);
+        if (before) fragment.appendChild(document.createTextNode(before));
+
+        const mark = document.createElement("mark");
+        mark.textContent = match;
+        fragment.appendChild(mark);
+
+        lastIndex = offset + match.length;
+        return match;
+      });
+
+      const after = text.slice(lastIndex);
+      if (after) fragment.appendChild(document.createTextNode(after));
+
+      textNode.parentNode?.replaceChild(fragment, textNode);
+      re.lastIndex = 0;
+    });
   });
 }
 
-//start search setup
 function expandSectionIfCollapsed(section) {
   if (section.getAttribute("data-collapsed") !== "true") return;
 
   section.setAttribute("data-collapsed", "false");
-
   const header = $(".doc-section__header", section);
   if (header) header.setAttribute("aria-expanded", "true");
 }
 
-
 function setupSearch() {
-  const input = $('#searchInput');
-  const sections = $$('.doc-section');
+  const input = $("#searchInput");
+  const sections = $$(".doc-section");
   if (!input || !sections.length) return;
 
-  function apply(q) {
-    const query = (q || '').trim().toLowerCase();
-
-    // clear previous highlight (keep your existing clearHighlights if you already added it)
+  function apply(query) {
+    const value = (query || "").trim().toLowerCase();
     clearHighlights(sections);
 
-    if (!query) {
-      sections.forEach(s => (s.style.display = ''));
+    if (!value) {
+      sections.forEach((section) => (section.style.display = ""));
       return;
     }
 
-    sections.forEach(s => {
-      const text = s.textContent.toLowerCase();
-      const hit = text.includes(query);
+    sections.forEach((section) => {
+      const text = section.textContent.toLowerCase();
+      const hit = text.includes(value);
 
-      s.style.display = hit ? '' : 'none';
+      section.style.display = hit ? "" : "none";
 
       if (hit) {
-        // ✅ NEW: auto-expand matching collapsed sections
-        expandSectionIfCollapsed(s);
-
-        // keep your existing highlight function (if you already use it)
-        highlightInSection(s, query);
+        expandSectionIfCollapsed(section);
+        highlightInSection(section, value);
       }
     });
   }
 
-  input.addEventListener('input', (e) => apply(e.target.value));
+  input.addEventListener("input", (e) => apply(e.target.value));
 
-  window.addEventListener('keydown', (e) => {
-    const k = (e.key || '').toLowerCase() === 'k';
-    if ((e.ctrlKey || e.metaKey) && k) {
+  window.addEventListener("keydown", (e) => {
+    const isK = (e.key || "").toLowerCase() === "k";
+    if ((e.ctrlKey || e.metaKey) && isK) {
       e.preventDefault();
       input.focus();
     }
   });
 }
 
-
 /* ---------------------------
    Mobile drawer
 --------------------------- */
 
-let __scrollY = 0;
+let scrollY = 0;
 
 function openDrawer() {
   const sidebar = $("#sidebar");
   const backdrop = $("#backdrop");
   if (!sidebar || !backdrop) return;
 
-  __scrollY = window.scrollY;
+  scrollY = window.scrollY;
 
   document.documentElement.classList.add("no-scroll");
   document.body.classList.add("no-scroll");
-  document.body.style.top = `-${__scrollY}px`;
+  document.body.style.top = `-${scrollY}px`;
 
   sidebar.classList.add("open");
   backdrop.hidden = false;
@@ -538,11 +642,19 @@ function closeDrawer() {
   document.body.classList.remove("no-scroll");
   document.body.style.top = "";
 
-  window.scrollTo(0, __scrollY);
+  window.scrollTo(0, scrollY);
 }
 
 function setupDrawer() {
-  $("#btnMenu")?.addEventListener("click", openDrawer);
+  $("#btnMenu")?.addEventListener("click", () => {
+    const sidebar = $("#sidebar");
+    if (sidebar?.classList.contains("open")) {
+      closeDrawer();
+      return;
+    }
+    openDrawer();
+  });
+
   $("#btnCloseMenu")?.addEventListener("click", closeDrawer);
   $("#backdrop")?.addEventListener("click", closeDrawer);
 
@@ -568,11 +680,12 @@ function setupDrawer() {
   buildTOC();
   setupActiveTOC();
 
-  // ✅ Must be before setupCollapsibles()
   setupCollapsibles();
   expandFromHash();
   window.addEventListener("hashchange", expandFromHash);
+
   setupCopyLinks();
+  setupHeaderLongPressCopy();
   setupSearch();
   setupDrawer();
 })();
