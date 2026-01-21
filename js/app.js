@@ -256,7 +256,6 @@ function setupActiveTOC() {
 function setupCollapsibles() {
   const sections = $$('[data-collapsible]');
   const toggleAllBtn = $("#btnToggleAll");
-  let statusTooltipTimer;
 
   function isAllExpanded() {
     return sections.every((section) => section.getAttribute("data-collapsed") !== "true");
@@ -271,20 +270,7 @@ function setupCollapsibles() {
       "aria-label",
       expanded ? "Collapse all sections" : "Expand all sections"
     );
-    toggleAllBtn.setAttribute("title", expanded ? "Collapse all" : "Expand all");
     toggleAllBtn.setAttribute("data-label", expanded ? "Collapse all" : "Expand all");
-    toggleAllBtn.setAttribute("data-tooltip", expanded ? "Collapse all" : "Expand all");
-  }
-
-  function flashToggleAllStatus(message) {
-    if (!toggleAllBtn) return;
-    clearTimeout(statusTooltipTimer);
-    toggleAllBtn.setAttribute("data-tooltip", message);
-    toggleAllBtn.classList.add("is-tooltip-visible");
-    statusTooltipTimer = setTimeout(() => {
-      toggleAllBtn.classList.remove("is-tooltip-visible");
-      updateToggleAllUI();
-    }, 1000);
   }
 
   function setSection(section, expand) {
@@ -337,7 +323,6 @@ function setupCollapsibles() {
     const expand = !isAllExpanded();
     sections.forEach((section) => setSection(section, expand));
     updateToggleAllUI();
-    flashToggleAllStatus(expand ? "Expanded all" : "Collapsed all");
     if (window.innerWidth <= 980) {
       closeDrawer();
     }

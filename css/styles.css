@@ -32,6 +32,7 @@ html[data-theme="light"]{
 
 *{ box-sizing:border-box; }
 html,body{ height:100%; }
+html, body{ background: var(--bg); }
 
 body{
   margin:0;
@@ -246,43 +247,6 @@ html[data-theme="dark"] .btn--primary:hover{
   }
 }
 
-.iconbtn--all::after{
-  content: attr(data-tooltip);
-  position: absolute;
-  left: 50%;
-  top: calc(100% + 10px);
-  transform: translate(-50%, -10px);
-  white-space: nowrap;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--panel2) 92%, transparent);
-  color: var(--text);
-  border: 1px solid var(--border);
-  box-shadow: 0 12px 24px rgba(0,0,0,.18);
-  backdrop-filter: blur(8px);
-  opacity: 0;
-  transform-origin: center;
-  transform: translate(-50%, -10px) scale(0.96);
-  pointer-events: none;
-  transition: opacity .2s ease, transform .2s ease;
-}
-
-.iconbtn--all.is-tooltip-visible::after{
-  opacity: 1;
-  transform: translate(-50%, 2px) scale(1);
-}
-
-.iconbtn--all.is-tooltip-visible{
-  animation: none;
-}
-
-@media (prefers-reduced-motion: reduce){
-  .iconbtn--all::after{
-    transition: none;
-  }
-}
 
 .alltoggle__icon{
   color: var(--text);
@@ -318,6 +282,11 @@ html[data-theme="dark"] .btn--primary:hover{
 .iconbtn:hover{ background: color-mix(in srgb, var(--panel2) 88%, transparent); }
 .iconbtn:active{ transform: translateY(1px); }
 .icon{ font-size: 16px; }
+.topbar__menu .icon{
+  display: block;
+  font-size: 18px;
+  line-height: 1;
+}
 
 /* Search */
 .search{
@@ -678,6 +647,12 @@ html[data-theme="dark"]{
   .hero__cta{ flex-wrap: wrap; }
   .doc{ padding: 12px 14px 20px 14px; }
   .iconbtn--link{ display: none; }
+  .doc ul,
+  .doc ol{
+    margin: .6rem 0 .9rem 2rem;
+    padding-left: 0.7rem;
+    line-height: 1.6;
+  }
 }
 
 @media (max-width: 520px){
@@ -704,18 +679,31 @@ html[data-theme="dark"]{
     width: 30px;
     height: 30px;
   }
-  .theme-switch{ --h: 24px; --w: 42px; }
+  .topbar__menu .icon{ font-size: 16px; }
+  .theme-switch{ --h: 30px; --w: 52px; }
   .brand__logo{ height: 18px; }
+  .doc ul,
+  .doc ol{
+    margin: .6rem 0 .9rem 1.25rem;
+    padding-left: 0.7rem;
+    line-height: 1.6;
+  }
 }
 
 @media (max-width: 360px){
   .topbar__inner{ gap: 6px; padding: 8px 10px; }
-  .iconbtn{ width: 32px; height: 32px; }
-  .theme-switch{ --h: 24px; --w: 42px; }
+  .iconbtn{ width: 28px; height: 28px; }
+  .topbar__menu .icon{ font-size: 15px; }
+  .theme-switch{ --h: 28px; --w: 48px; }
   .btn{ padding: 6px 9px; }
   .brand__logo{ height: 18px; }
   .brand{display: flex;}
-  ul,ol{ margin: .6rem 0 .9rem -0.75rem; line-height: 1.4; }
+  .doc ul,
+  .doc ol{
+    margin: .6rem 0 .9rem 1.25rem;
+    padding-left: 0.7rem;
+    line-height: 1.6;
+  }
 }
 
 /* Print */
