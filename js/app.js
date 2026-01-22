@@ -255,22 +255,26 @@ function setupActiveTOC() {
 
 function setupCollapsibles() {
   const sections = $$('[data-collapsible]');
-  const toggleAllBtn = $("#btnToggleAll");
+  const toggleAllButtons = $$(".js-toggle-all");
 
   function isAllExpanded() {
     return sections.every((section) => section.getAttribute("data-collapsed") !== "true");
   }
 
   function updateToggleAllUI() {
-    if (!toggleAllBtn) return;
+    if (!toggleAllButtons.length) return;
 
     const expanded = isAllExpanded();
-    toggleAllBtn.classList.toggle("is-expanded", expanded);
-    toggleAllBtn.setAttribute(
-      "aria-label",
-      expanded ? "Collapse all sections" : "Expand all sections"
-    );
-    toggleAllBtn.setAttribute("data-label", expanded ? "Collapse all" : "Expand all");
+    toggleAllButtons.forEach((button) => {
+      button.classList.toggle("is-expanded", expanded);
+      button.setAttribute(
+        "aria-label",
+        expanded ? "Collapse all sections" : "Expand all sections"
+      );
+      button.setAttribute("data-label", expanded ? "Collapse all" : "Expand all");
+      const label = button.querySelector(".toggle-all__label");
+      if (label) label.textContent = expanded ? "Collapse all" : "Expand all";
+    });
   }
 
   function setSection(section, expand) {
@@ -318,14 +322,23 @@ function setupCollapsibles() {
     });
   });
 
-  toggleAllBtn?.addEventListener("click", (e) => {
-    e.preventDefault();
-    const expand = !isAllExpanded();
-    sections.forEach((section) => setSection(section, expand));
-    updateToggleAllUI();
-    if (window.innerWidth <= 980) {
-      closeDrawer();
-    }
+  toggleAllButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      const expand = !isAllExpanded();
+      sections.forEach((section) => setSection(section, expand));
+      updateToggleAllUI();
+      if (button.classList.contains("toggle-all--fab")) {
+        button.classList.add("is-expanded-temp");
+        clearTimeout(button._shrinkTimer);
+        button._shrinkTimer = setTimeout(() => {
+          button.classList.remove("is-expanded-temp");
+        }, 800);
+      }
+      if (window.innerWidth <= 980) {
+        closeDrawer();
+      }
+    });
   });
 
   updateToggleAllUI();
@@ -559,7 +572,21 @@ function expandSectionIfCollapsed(section) {
 function setupSearch() {
   const input = $("#searchInput");
   const sections = $$(".doc-section");
+  const search = $(".search");
+  const toggleBtn = $("#btnSearchToggle");
+  const emptyState = $("#searchEmpty");
   if (!input || !sections.length) return;
+
+  function openSearch() {
+    if (!search) return;
+    search.classList.add("is-open");
+    input.focus();
+  }
+
+  function closeSearch() {
+    if (!search) return;
+    search.classList.remove("is-open");
+  }
 
   function apply(query) {
     const value = (query || "").trim().toLowerCase();
@@ -567,9 +594,11 @@ function setupSearch() {
 
     if (!value) {
       sections.forEach((section) => (section.style.display = ""));
+      if (emptyState) emptyState.hidden = true;
       return;
     }
 
+    let hits = 0;
     sections.forEach((section) => {
       const text = section.textContent.toLowerCase();
       const hit = text.includes(value);
@@ -577,19 +606,40 @@ function setupSearch() {
       section.style.display = hit ? "" : "none";
 
       if (hit) {
+        hits += 1;
         expandSectionIfCollapsed(section);
         highlightInSection(section, value);
       }
     });
+
+    if (emptyState) emptyState.hidden = hits !== 0;
   }
 
   input.addEventListener("input", (e) => apply(e.target.value));
+  toggleBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (!search) return;
+    if (search.classList.contains("is-open")) {
+      closeSearch();
+    } else {
+      openSearch();
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!search?.classList.contains("is-open")) return;
+    if (search.contains(e.target) || toggleBtn?.contains(e.target)) return;
+    closeSearch();
+  });
 
   window.addEventListener("keydown", (e) => {
     const isK = (e.key || "").toLowerCase() === "k";
     if ((e.ctrlKey || e.metaKey) && isK) {
       e.preventDefault();
-      input.focus();
+      openSearch();
+    }
+    if (e.key === "Escape") {
+      closeSearch();
     }
   });
 }
