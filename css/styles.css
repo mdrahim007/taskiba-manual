@@ -59,7 +59,7 @@ body::before{
 }
 
 a{ color: inherit; text-decoration: none; }
-p{ line-height: 1.7; margin: .65rem 0; color: var(--text); }
+p{ line-height: 1.7; margin: .65rem 0; color: var(--text); text-align: justify; }
 ul,ol{ margin: .6rem 0 .9rem 1.25rem; line-height: 1.7; }
 li{ margin: .2rem 0; }
 strong{ font-weight: 650; }
@@ -361,7 +361,7 @@ html[data-theme="dark"] .btn--primary:hover{
   flex-direction: column;
   overflow:hidden;
   overscroll-behavior: contain;
-  top: calc(var(--topbar-h) + 0px);
+  top: calc(var(--topbar-h) + 10px);
   height: calc(100vh - var(--topbar-h) - 20px);
 }
 .sidebar__top{
@@ -477,7 +477,7 @@ html[data-theme="dark"] .btn--primary:hover{
   border-bottom: 1px solid var(--border);
 }
 .hero__title{ margin:0; font-size: clamp(22px, 3vw + 12px, 32px); letter-spacing: -.3px; color: var(--hero-title);}
-.hero__lead{ max-width: 780px;  margin-top: 8px; font-size: clamp(14px, 1.2vw + 11px, 16px); }
+.hero__lead{margin-top: 8px; font-size: clamp(14px, 1.2vw + 11px, 16px); text-align: justify; }
 html[data-theme="light"]{
   --hero-title: #8B5CF6;
 }
