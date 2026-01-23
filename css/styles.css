@@ -546,6 +546,14 @@ html[data-theme="dark"]{
   display:none;
 }
 
+.subsection{
+  padding-left: 10px;
+  padding-bottom: 20px;
+}
+.subsubsection{
+  padding-left: 30px;
+}
+
 /* =========================
     Section header chevron
     ========================= */
