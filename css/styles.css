@@ -62,13 +62,14 @@ a{ color: inherit; text-decoration: none; }
 p{ line-height: 1.7; margin: .65rem 0; color: var(--text); text-align: justify; }
 ul,ol{ margin: .6rem 0 .9rem 0.7rem; line-height: 1.7; }
 li{ margin: .2rem 0; }
+
 /* List items that wrap block content */
-.doc ul > li.list-block{
+/* .doc ul > li.list-block{
   list-style: none;
 }
 .doc ul > li.list-block::marker{
   content: '';
-}
+} */
 strong{ font-weight: 650; }
 
 .muted{ color: var(--muted); font-size: clamp(11px, 0.3vw + 10px, 13px); }
@@ -555,6 +556,11 @@ html[data-theme="dark"]{
 
 .subsection{
   padding: 10px 10px 10px 10px;
+}
+.subsection + .subsection{
+  border-top: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
+  padding-top: 14px;
+  margin-top: 8px;
 }
 .subsubsection{
   padding: 5px 0px 0px 25px;
