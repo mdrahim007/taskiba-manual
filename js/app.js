@@ -381,7 +381,8 @@ function showCopyTooltip(x, y, text = "Copied!") {
 
 async function copySectionLink(section, x, y) {
   if (!section?.id) return false;
-  const url = `${location.origin}${location.pathname}#${section.id}`;
+  const origin = location.origin === "null" ? "file://" : location.origin;
+  const url = `${origin}${location.pathname}#${section.id}`;
   const ok = await copyToClipboard(url);
   if (!ok) return false;
   showCopyTooltip(x, y);
