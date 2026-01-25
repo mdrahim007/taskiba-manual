@@ -2,6 +2,7 @@
   --bg: #0b1220;
   --panel: rgba(255,255,255,.06);
   --panel2: rgba(255,255,255,.08);
+  --panel-solid: #0f172a;
   --text: rgba(255,255,255,.92);
   --muted: rgba(255,255,255,.66);
   --border: rgba(255,255,255,.10);
@@ -15,7 +16,7 @@
   --radius-md: 12px;
 
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-  --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  --sans: "Inter", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
 
   --topbar-h: 0px;
 }
@@ -24,6 +25,7 @@ html[data-theme="light"]{
   --bg: #f6f7fb;
   --panel: #ffffff;
   --panel2: #f1f3fb;
+  --panel-solid: #ffffff;
   --text: rgba(15, 23, 42, .95);
   --muted: rgba(15, 23, 42, .65);
   --border: rgba(15,23,42,.10);
@@ -53,14 +55,20 @@ body::before{
   pointer-events: none;
 
   background:
-    radial-gradient(1200px 800px at 20% 0%, rgba(124,92,255,.20), transparent 60%),
-    radial-gradient(900px 700px at 95% 15%, rgba(34,197,94,.14), transparent 55%),
+    url("../img/background_light.svg") center / cover no-repeat,
     var(--bg);
+}
+
+html[data-theme="dark"] body::before{
+  background:
+    url("../img/background_dark.svg") center / cover no-repeat,
+    var(--bg);
+    opacity: 0.7;
 }
 
 a{ color: inherit; text-decoration: none; }
 p{ line-height: 1.7; margin: .65rem 0; color: var(--text); text-align: justify; }
-ul,ol{ margin: .6rem 0 .9rem 0.7rem; line-height: 1.7; }
+ul,ol{ margin: .7rem 0 .9rem 0.7rem; line-height: 1.7; }
 li{ margin: .2rem 0; }
 
 /* List items that wrap block content */
@@ -362,7 +370,7 @@ html[data-theme="dark"] .btn--primary:hover{
   position: sticky;
   top: 78px;
   border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  background: var(--panel-solid);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow);
   display: flex;
@@ -433,6 +441,7 @@ html[data-theme="dark"] .btn--primary:hover{
   flex: 1 1 auto;
   min-height: 0;
   overflow:auto;
+  position: relative;
 }
 .toc a{
   display:flex;
@@ -468,15 +477,15 @@ html[data-theme="dark"] .btn--primary:hover{
   background: color-mix(in srgb, var(--brand) 16%, transparent);
   border-color: color-mix(in srgb, var(--brand) 35%, var(--border));
 }
-.toc .toc__depth-2{ padding-left: 10px; font-size: clamp(14px, 0.8vw + 11px, 16px); font-weight: 500;}
-.toc .toc__depth-3{ padding-left: 28px; font-size: clamp(13px, 0.7vw + 10px, 14px); font-weight: 400; }
-.toc .toc__depth-4{ padding-left: 38px; font-size: clamp(11px, 0.5vw + 9px, 13px); color: var(--muted); }
+.toc .toc__depth-2{ padding-left: 10px; font-size: clamp(14px, 0.8vw + 11px, 15px); font-weight: 600;}
+.toc .toc__depth-3{ padding-left: 28px; font-size: clamp(13px, 0.7vw + 10px, 13px); font-weight: 400; }
+.toc .toc__depth-4{ padding-left: 38px; font-size: clamp(11px, 0.5vw + 9px, 12px); color: var(--muted); }
 
 /* Main */
 .main{
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  background: color-mix(in srgb, var(--panel) 86%, transparent);
+  background: var(--panel-solid);
   box-shadow: var(--shadow);
   overflow:hidden;
 }
@@ -506,9 +515,10 @@ html[data-theme="dark"]{
 .doc{
   padding: 16px 20px 24px 20px;
   font-size: clamp(14px, 0.7vw + 10px, 15px);
+  font-weight: 400;
 }
 .doc h2{ margin: 0; font-size: clamp(17px, 1.4vw + 13px, 20px); letter-spacing: -.2px; font-weight: 700;}
-.doc h3{ margin: 16px 0 6px; font-size: clamp(15px, 1.1vw + 12px, 18px); font-weight: 650;}
+.doc h3{ margin: 16px 0 6px; font-size: clamp(15px, 1.1vw + 12px, 18px); font-weight: 700;}
 .doc h4{ margin: 14px 0 6px; font-size: clamp(14px, 0.9vw + 11px, 17px); color: color-mix(in srgb, var(--text) 85%, var(--muted)); }
 .doc code{
   font-family: var(--mono);
@@ -709,11 +719,11 @@ html[data-theme="dark"]{
     max-height: none;
   }
   html[data-theme="dark"] .sidebar{
-    background: color-mix(in srgb, #0b1220 88%, transparent);
+    background: var(--panel-solid);
     backdrop-filter: blur(8px);
   }
   html[data-theme="light"] .sidebar{
-    background: color-mix(in srgb, #ffffff 88%, transparent);
+    background: var(--panel-solid);
     backdrop-filter: blur(8px);
   }
   .sidebar.open{ transform: translateX(0); }
@@ -1092,13 +1102,13 @@ html[data-theme="dark"] .iconbtn--link:hover{
 
 /* Firefox */
 html{
-  scrollbar-width: thin;
+  /* scrollbar-width: thin; */
   scrollbar-color: color-mix(in srgb, var(--muted) 45%, transparent) transparent;
 }
 
 /* Chrome / Edge / Safari */
 html::-webkit-scrollbar{
-  width: 10px;
+  width: 25px;
 }
 
 html::-webkit-scrollbar-track{
@@ -1116,66 +1126,55 @@ html::-webkit-scrollbar-thumb:hover{
   background: color-mix(in srgb, var(--muted) 55%, transparent);
 }
 /* =========================
-   Auto-hide TOC scrollbar (solid brand colors)
+   TOC custom scrollbar (CSS + JS)
    ========================= */
 
-/* ---------- Firefox ---------- */
+/* Hide native scrollbars (all browsers) */
 .toc{
-  scrollbar-width: none; /* hidden by default */
-}
-
-/* Show scrollbar only on hover */
-.toc:hover{
-  scrollbar-width: thin;
-  scrollbar-color: #d0c6fb transparent;
-}
-
-/* Hide again while active (e.g., click/drag) */
-.toc:active{
   scrollbar-width: none;
 }
-
-/* ---------- Chrome / Edge / Safari ---------- */
 .toc::-webkit-scrollbar{
-  width: 0px;            /* hidden */
-  transition: width .15s ease;
+  width: 0;
+  height: 0;
 }
 
-.toc:hover::-webkit-scrollbar{
-  width: 8px;            /* visible on hover */
-}
-
-/* Track */
-.toc::-webkit-scrollbar-track{
-  background: transparent;
-}
-
-/* Thumb – default (light mode) */
-.toc::-webkit-scrollbar-thumb{
-  background: #8B5CF6;   /* reversed: strong by default */
+/* Custom scrollbar overlay */
+.toc-scrollbar{
+  position: absolute;
+  right: 0px;
+  top: 0;
+  bottom: auto;
+  height: 0;
+  width: 4px;
   border-radius: 999px;
-  border: 3px solid transparent;
-  background-clip: content-box;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease;
+}
+.toc-scrollbar.is-visible{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.toc-scrollbar__thumb{
+  position: absolute;
+  left: 0px;
+  right: 0;
+  top: 0;
+  height: 24px;
+  border-radius: 999px;
+  background: #8a5cf686;
   transition: background .15s ease;
+  cursor: pointer;
 }
-
-/* Thumb – hover (light mode) */
-.toc::-webkit-scrollbar-thumb:hover{
-  background: #d0c6fb;   /* reversed hover */
-  background-clip: content-box;
+.toc-scrollbar__thumb:hover{
+  background: #8B5CF6;
 }
-
-/* Hide again while active (e.g., click/drag) */
-.toc:active::-webkit-scrollbar{
-  width: 0px;
-}
-
-/* ---------- Dark mode tuning ---------- */
-html[data-theme="dark"] .toc::-webkit-scrollbar-thumb{
+html[data-theme="dark"] .toc-scrollbar__thumb{
   background: color-mix(in srgb, #8B5CF6 65%, transparent);
 }
-
-html[data-theme="dark"] .toc::-webkit-scrollbar-thumb:hover{
+html[data-theme="dark"] .toc-scrollbar__thumb:hover{
   background: #d0c6fb;
 }
 /* =========================

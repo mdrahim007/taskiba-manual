@@ -250,6 +250,146 @@ function setupActiveTOC() {
 }
 
 /* ---------------------------
+   TOC custom scrollbar
+--------------------------- */
+
+function setupTocScrollbar() {
+  const toc = $("#toc");
+  if (!toc) return;
+
+  const host = toc.parentElement || toc;
+  let bar = $(".toc-scrollbar", host);
+  if (!bar) {
+    bar = document.createElement("div");
+    bar.className = "toc-scrollbar";
+    const thumb = document.createElement("div");
+    thumb.className = "toc-scrollbar__thumb";
+    bar.appendChild(thumb);
+    host.appendChild(bar);
+  }
+
+  const thumb = $(".toc-scrollbar__thumb", bar);
+  if (!thumb) return;
+
+  let isHovering = false;
+  let isDragging = false;
+  let hideTimer = null;
+  let dragStartY = 0;
+  let dragStartScroll = 0;
+
+  const showBar = () => {
+    bar.classList.add("is-visible");
+  };
+
+  const scheduleHide = (delay = 600) => {
+    if (hideTimer) clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => {
+      if (!isHovering && !isDragging) {
+        bar.classList.remove("is-visible");
+      }
+    }, delay);
+  };
+
+  const update = () => {
+    const { scrollHeight, clientHeight, scrollTop } = toc;
+    const barTop = toc.offsetTop + 8;
+    const barHeight = Math.max(0, toc.clientHeight - 16);
+    bar.style.top = `${barTop}px`;
+    bar.style.height = `${barHeight}px`;
+
+    const track = bar.clientHeight || 0;
+
+    if (scrollHeight <= clientHeight + 1 || track <= 0) {
+      bar.style.visibility = "hidden";
+      return;
+    }
+
+    bar.style.visibility = "visible";
+
+    const thumbHeight = Math.max(
+      20,
+      Math.round((clientHeight / scrollHeight) * track)
+    );
+    const maxTop = Math.max(0, track - thumbHeight);
+    const top =
+      scrollHeight <= clientHeight
+        ? 0
+        : Math.round((scrollTop / (scrollHeight - clientHeight)) * maxTop);
+
+    thumb.style.height = `${thumbHeight}px`;
+    thumb.style.transform = `translateY(${top}px)`;
+  };
+
+  toc.addEventListener("scroll", () => {
+    update();
+    showBar();
+    scheduleHide();
+  }, { passive: true });
+  window.addEventListener("resize", update);
+
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(update);
+    ro.observe(toc);
+  }
+
+  toc.addEventListener("mouseenter", () => {
+    isHovering = true;
+    showBar();
+  });
+
+  toc.addEventListener("mouseleave", () => {
+    isHovering = false;
+    scheduleHide(150);
+  });
+
+  thumb.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    isDragging = true;
+    showBar();
+    dragStartY = e.clientY;
+    dragStartScroll = toc.scrollTop;
+
+    const onMove = (ev) => {
+      if (!isDragging) return;
+      const { scrollHeight, clientHeight } = toc;
+      const track = bar.clientHeight || 1;
+      const thumbHeight = thumb.getBoundingClientRect().height;
+      const maxTop = Math.max(0, track - thumbHeight);
+      const maxScroll = Math.max(0, scrollHeight - clientHeight);
+      const deltaY = ev.clientY - dragStartY;
+      const scrollDelta = maxTop > 0 ? (deltaY / maxTop) * maxScroll : 0;
+      toc.scrollTop = dragStartScroll + scrollDelta;
+    };
+
+    const onUp = () => {
+      isDragging = false;
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+      scheduleHide();
+    };
+
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  });
+
+  bar.addEventListener("mousedown", (e) => {
+    if (e.target === thumb) return;
+    e.preventDefault();
+    const rect = bar.getBoundingClientRect();
+    const clickY = e.clientY - rect.top;
+    const { scrollHeight, clientHeight } = toc;
+    const track = rect.height || 1;
+    const thumbHeight = thumb.getBoundingClientRect().height;
+    const maxTop = Math.max(0, track - thumbHeight);
+    const maxScroll = Math.max(0, scrollHeight - clientHeight);
+    const targetTop = Math.min(Math.max(clickY - thumbHeight / 2, 0), maxTop);
+    toc.scrollTop = maxTop > 0 ? (targetTop / maxTop) * maxScroll : 0;
+  });
+
+  update();
+}
+
+/* ---------------------------
    Collapsibles
 --------------------------- */
 
@@ -715,6 +855,7 @@ function setupDrawer() {
   ensureHeadingIds();
   buildTOC();
   setupActiveTOC();
+  setupTocScrollbar();
 
   setupCollapsibles();
   expandFromHash();
