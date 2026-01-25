@@ -364,7 +364,7 @@ async function copyToClipboard(text) {
 }
 
 let copyTooltip;
-function showCopyTooltip(x, y, text = "Copied!") {
+function showCopyTooltip(x, y, text = "Link Copied!") {
   if (!copyTooltip) {
     copyTooltip = document.createElement("div");
     copyTooltip.className = "copy-tooltip";
