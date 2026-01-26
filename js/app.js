@@ -716,7 +716,186 @@ function setupSearch() {
   const search = $(".search");
   const toggleBtn = $("#btnSearchToggle");
   const emptyState = $("#searchEmpty");
+  const countEl = $("#searchCount");
+  const prevBtn = $("#searchPrev");
+  const nextBtn = $("#searchNext");
+  const clearBtn = $("#searchClear");
+  const statusEl = $("#searchStatus");
+  const suggest = $("#searchSuggest");
+  const suggestList = $("#searchSuggestList");
+  const suggestClear = $("#searchSuggestClear");
+  const doc = $("#doc");
   if (!input || !sections.length) return;
+
+  let matches = [];
+  let activeIndex = -1;
+  let lastQuery = "";
+  let searchTimer = null;
+  const recentKey = "taskiba.search.recent";
+  const maxRecent = 5;
+  let suggestHideTimer = null;
+  let suggestIndex = -1;
+  const sectionTextCache = new WeakMap();
+
+  function clearActiveHighlight() {
+    if (!doc) return;
+    $$("mark.mark--active", doc).forEach((mark) => {
+      mark.classList.remove("mark--active");
+    });
+  }
+
+  function getSectionText(section) {
+    let cached = sectionTextCache.get(section);
+    if (cached) return cached;
+    const text = (section.textContent || "").toLowerCase();
+    sectionTextCache.set(section, text);
+    return text;
+  }
+
+  function loadRecent() {
+    try {
+      const raw = localStorage.getItem(recentKey);
+      const list = raw ? JSON.parse(raw) : [];
+      return Array.isArray(list) ? list : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveRecent(list) {
+    try {
+      localStorage.setItem(recentKey, JSON.stringify(list));
+    } catch {
+      // ignore storage errors
+    }
+  }
+
+  function clearRecent() {
+    try {
+      localStorage.removeItem(recentKey);
+    } catch {
+      saveRecent([]);
+    }
+  }
+
+  function addRecent(term) {
+    const clean = term.trim();
+    if (!clean) return;
+    const list = loadRecent().filter((item) => item !== clean);
+    list.unshift(clean);
+    saveRecent(list.slice(0, maxRecent));
+  }
+
+  function getFilteredRecent(filter) {
+    const list = loadRecent();
+    const term = (filter || "").trim().toLowerCase();
+    if (!term) return list;
+    return list.filter((item) => item.toLowerCase().includes(term));
+  }
+
+  function renderRecent(filter) {
+    if (!suggestList) return;
+    const list = getFilteredRecent(filter);
+    suggestList.innerHTML = "";
+    if (!list.length) return;
+
+    list.forEach((term, index) => {
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = "search__suggest-item";
+      item.setAttribute("data-term", term);
+      item.innerHTML = `
+        <span class="search__suggest-text">${term}</span>
+        <button class="search__suggest-remove" type="button" aria-label="Remove recent search">
+          <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12M18 6l-12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      `;
+      suggestList.appendChild(item);
+    });
+  }
+
+  function setSuggestIndex(nextIndex) {
+    if (!suggestList) return;
+    const items = $$(".search__suggest-item", suggestList);
+    if (!items.length) return;
+    const max = items.length - 1;
+    const safeIndex = Math.max(-1, Math.min(nextIndex, max));
+    items.forEach((item, idx) => {
+      item.classList.toggle("is-active", idx === safeIndex);
+    });
+    suggestIndex = safeIndex;
+  }
+
+  function showSuggest(filter) {
+    if (!suggest || !suggestList) return;
+    renderRecent(filter);
+    const list = getFilteredRecent(filter);
+    suggest.hidden = list.length === 0;
+    if (suggestClear) suggestClear.hidden = list.length === 0;
+    setSuggestIndex(-1);
+  }
+
+  function hideSuggest() {
+    if (!suggest) return;
+    suggest.hidden = true;
+  }
+
+  function updateCount() {
+    if (!countEl) return;
+    if (!matches.length || activeIndex < 0) {
+      countEl.textContent = "0/0";
+      return;
+    }
+    countEl.textContent = `${activeIndex + 1}/${matches.length}`;
+  }
+
+  function updateNavState() {
+    const disabled = matches.length === 0;
+    prevBtn?.toggleAttribute("disabled", disabled);
+    nextBtn?.toggleAttribute("disabled", disabled);
+  }
+
+  function setActiveMatch(index, shouldScroll = true) {
+    if (!matches.length) {
+      activeIndex = -1;
+      updateCount();
+      updateNavState();
+      return;
+    }
+
+    const safeIndex = ((index % matches.length) + matches.length) % matches.length;
+    clearActiveHighlight();
+    activeIndex = safeIndex;
+    const active = matches[activeIndex];
+    active.classList.add("mark--active");
+
+    if (shouldScroll) {
+      active.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+
+    updateCount();
+    updateNavState();
+  }
+
+  function refreshMatches(hasQuery) {
+    matches = doc ? Array.from(doc.querySelectorAll("mark")) : [];
+    if (search) {
+      search.classList.toggle("has-query", hasQuery);
+      search.classList.toggle("has-results", matches.length > 0);
+    }
+    if (statusEl) {
+      statusEl.textContent = matches.length ? "" : "No results";
+    }
+    if (!matches.length) {
+      activeIndex = -1;
+      updateCount();
+      updateNavState();
+      return;
+    }
+    setActiveMatch(0, false);
+  }
 
   function openSearch() {
     if (!search) return;
@@ -727,21 +906,29 @@ function setupSearch() {
   function closeSearch() {
     if (!search) return;
     search.classList.remove("is-open");
+    hideSuggest();
   }
 
-  function apply(query) {
+  function runSearch(query) {
     const value = (query || "").trim().toLowerCase();
+    if (value === lastQuery) return;
+    lastQuery = value;
     clearHighlights(sections);
+    clearActiveHighlight();
 
     if (!value) {
       sections.forEach((section) => (section.style.display = ""));
       if (emptyState) emptyState.hidden = true;
+      matches = [];
+      activeIndex = -1;
+      refreshMatches(false);
+      if (document.activeElement === input) showSuggest("");
       return;
     }
 
     let hits = 0;
     sections.forEach((section) => {
-      const text = section.textContent.toLowerCase();
+      const text = getSectionText(section);
       const hit = text.includes(value);
 
       section.style.display = hit ? "" : "none";
@@ -754,9 +941,113 @@ function setupSearch() {
     });
 
     if (emptyState) emptyState.hidden = hits !== 0;
+    refreshMatches(true);
+    if (document.activeElement === input) showSuggest(value);
   }
 
-  input.addEventListener("input", (e) => apply(e.target.value));
+  function apply(query) {
+    if (searchTimer) window.clearTimeout(searchTimer);
+    searchTimer = window.setTimeout(() => {
+      runSearch(query);
+      searchTimer = null;
+    }, 120);
+  }
+
+  input.addEventListener("input", (e) => {
+    apply(e.target.value);
+    if (document.activeElement === input) {
+      showSuggest(input.value);
+    }
+  });
+  input.addEventListener("focus", () => {
+    if (suggestHideTimer) {
+      window.clearTimeout(suggestHideTimer);
+      suggestHideTimer = null;
+    }
+    showSuggest(input.value);
+  });
+  input.addEventListener("blur", () => {
+    suggestHideTimer = window.setTimeout(() => {
+      hideSuggest();
+    }, 120);
+  });
+  suggestList?.addEventListener("pointerdown", (e) => {
+    const removeBtn = e.target.closest(".search__suggest-remove");
+    if (removeBtn) {
+      e.preventDefault();
+      const row = removeBtn.closest(".search__suggest-item");
+      const term = row?.getAttribute("data-term") || "";
+      if (term) {
+        const list = loadRecent().filter((item) => item !== term);
+        saveRecent(list);
+      }
+      showSuggest(input.value);
+      return;
+    }
+    const target = e.target.closest(".search__suggest-item");
+    if (!target) return;
+    const term = target.getAttribute("data-term") || "";
+    input.value = term;
+    apply(term);
+    input.focus();
+    hideSuggest();
+  });
+  suggestClear?.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    clearRecent();
+    if (suggestList) suggestList.innerHTML = "";
+    hideSuggest();
+  });
+  clearBtn?.addEventListener("click", () => {
+    input.value = "";
+    apply("");
+    input.focus();
+    showSuggest("");
+  });
+  prevBtn?.addEventListener("click", () => setActiveMatch(activeIndex - 1));
+  nextBtn?.addEventListener("click", () => setActiveMatch(activeIndex + 1));
+  input.addEventListener("keydown", (e) => {
+    const suggestVisible = !!suggest && !suggest.hidden;
+    const suggestItems = suggestList ? $$(".search__suggest-item", suggestList) : [];
+    if ((e.key === "ArrowDown" || e.key === "ArrowUp") && suggestVisible && suggestItems.length) {
+      e.preventDefault();
+      const delta = e.key === "ArrowDown" ? 1 : -1;
+      setSuggestIndex(suggestIndex + delta);
+      return;
+    }
+    if (e.key === "Enter" && suggestVisible && suggestIndex >= 0 && suggestItems[suggestIndex]) {
+      e.preventDefault();
+      const term = suggestItems[suggestIndex].getAttribute("data-term") || "";
+      input.value = term;
+      apply(term);
+      hideSuggest();
+      return;
+    }
+    if (e.key === "Enter" && matches.length) {
+      e.preventDefault();
+      if (e.shiftKey) {
+        setActiveMatch(activeIndex - 1);
+        return;
+      }
+      setActiveMatch(activeIndex + 1);
+    }
+    if (e.key === "Enter") {
+      addRecent(input.value);
+    }
+    if ((e.key || "").toLowerCase() === "escape") {
+      hideSuggest();
+    }
+    if (!input.value.trim() && e.key >= "1" && e.key <= "5") {
+      const list = loadRecent();
+      const idx = Number(e.key) - 1;
+      if (list[idx]) {
+        input.value = list[idx];
+        apply(list[idx]);
+        hideSuggest();
+      }
+    }
+  });
+  input.addEventListener("change", () => addRecent(input.value));
   toggleBtn?.addEventListener("click", (e) => {
     e.preventDefault();
     if (!search) return;

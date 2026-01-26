@@ -64,14 +64,46 @@
 
       <div class="topbar__actions">
         <div class="search">
-          <span class="search__icon" aria-hidden="true">
-            <svg width="18" height="18" viewBox="0 0 24 24">
-              <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
-              <path d="M20 20l-3.5-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </span>
-          <input id="searchInput" class="search__input" type="search" placeholder="Search in the manual..." autocomplete="off" />
-          <kbd class="search__kbd">Ctrl+K</kbd>
+          <div class="search__field">
+            <span class="search__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+                <path d="M20 20l-3.5-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <input id="searchInput" class="search__input" type="search" placeholder="Search in the manual..." autocomplete="off" />
+            <span class="search__kbd" aria-hidden="true">Ctrl + K</span>
+            <button class="search__clear" id="searchClear" type="button" aria-label="Clear search" title="Clear search">
+              <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6l-12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+          <div class="search__meta">
+            <span class="search__count" id="searchCount" aria-live="polite">0/0</span>
+            <div class="search__nav">
+              <button class="search__nav-btn" id="searchPrev" type="button" aria-label="Previous match" title="Previous match">
+                <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 14l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <button class="search__nav-btn" id="searchNext" type="button" aria-label="Next match" title="Next match">
+                <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 10l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <span class="search__status" id="searchStatus" aria-live="polite">No results</span>
+          </div>
+          <div class="search__suggest" id="searchSuggest" hidden>
+            <div class="search__suggest-header">
+              <div class="search__suggest-title">Recent searches</div>
+              <button class="search__suggest-clear" id="searchSuggestClear" type="button" aria-label="Clear search history" title="Clear search history">
+                Clear history
+              </button>
+            </div>
+            <div class="search__suggest-list" id="searchSuggestList"></div>
+          </div>
         </div>
         <button class="iconbtn topbar__search" id="btnSearchToggle" aria-label="Open search">
           <svg class="topbar__search-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
@@ -251,7 +283,7 @@
             <p>Taskiba is a comprehensive project management and collaboration platform designed to help teams stay organized, track progress, and deliver work with greater efficiency. It brings together project planning, task tracking, time management, budget control, bug tracking, and team collaboration into one unified system. The platform addresses common challenges faced by modern teams, such as scattered communication, missed deadlines, budget overruns, and limited visibility into ongoing work. By centralizing all activities into a single source of truth, Taskiba ensures clarity, accountability, and streamlined workflows.</p>
             <p>From initial planning to final delivery, the platform supports the entire project lifecycle with tools that scale to meet the needs of both small teams and large organizations. Its intuitive interface allows for quick adoption by new users, while its powerful features provide the flexibility and depth required for complex projects.</p>
             <p>Whether it's managing multiple workspaces, monitoring budgets, or collaborating across global teams, Taskiba enables organizations to boost productivity, maintain control, and achieve better outcomes, all within a single, integrated solution.</p>
-
+            <img src="img/Dashboard.png" alt="Taskiba Dashboard Screenshot" class="image" />
         </div>
         <div class="subsection">
             <h3>1.2 Key Features Overview</h3>
@@ -356,7 +388,8 @@
         <div class="subsection">
             <h3>2.1 User Registration</h3>
             <p>To begin using Taskiba, users must create an account through a secure registration process that verifies identity and protects data.</p>
-            <p><strong>1. Visit the Registration Page:</strong> Go to the official Taskiba URL or public portal. On the homepage, click <strong>"Sign Up"</strong> or <strong>"Get Started"</strong> to open the registration form, designed with clear steps, security, and real-time validation.</p>
+            <p><strong>1. Visit the Registration Page:</strong> Go to the official Taskiba URL: <a href="https://taskiba.com">https://taskiba.com</a>. On the homepage, click <strong>"Sign Up"</strong> or <strong>"Get Started"</strong> to open the registration form, designed with clear steps, security, and real-time validation.</p>
+            <img src="img/Signup.png" alt="Taskiba Registration Page Screenshot" class="image" />
             <p><strong>2. Fill Registration Form:</strong> Provide accurate details in all required fields:</p>
             <ul>
               <li><strong>Full Name:</strong> Enter your complete name, visible to team members on assignments, records, and notifications.</li>
@@ -379,6 +412,7 @@
             <h3>2.3 User Login</h3>
             <p>Once email verification is complete, log in securely to Taskiba with protections against unauthorized access.</p>
             <p><strong>1. Access the Login Page:</strong> Use the login URL from your welcome email or the main website via "Sign In/Login." The interface provides clear fields and security guidance.</p>
+            <img src="img/Login.png" alt="Taskiba Login Page Screenshot" class="image" />
             <p><strong>2. Enter Login Credentials:</strong></p>
             <ul>
               <li><strong>Email Address:</strong> Enter the exact registered email (case-sensitive).</li>
@@ -400,6 +434,9 @@
             <h4>2.4.1 Forgot Password</h4><p>If you forget your password, follow the secure recovery process:</p>
                 <ul>
                   <li><strong>Access Password Reset:</strong> On the login page, click <strong>"Forgot Password?"</strong> to reach the recovery page. Enter your registered email and click <strong>"Send Reset Link."</strong> If valid, the system emails a secure reset link.</li>
+                  </ul>
+                  <img src="img/Forgot_password.png" alt="Taskiba Forgot Password Page Screenshot" class="image" />
+                  <ul>
                   <li><strong>Reset Your Password:</strong> Open the email, click the time-limited link, and access the reset form. Enter your new password twice, following security rules, and click <strong>"Reset Password."</strong> The system checks strength and matches before granting access.</li>
                 </ul>
           </div>
