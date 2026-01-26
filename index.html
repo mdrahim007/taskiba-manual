@@ -153,6 +153,16 @@
 
   <!-- Mobile drawer backdrop -->
   <div class="backdrop" id="backdrop" hidden></div>
+  <!-- Image lightbox -->
+  <div class="lightbox" id="lightbox" hidden aria-hidden="true">
+    <div class="lightbox__title" id="lightboxTitle"></div>
+    <button class="lightbox__close" id="lightboxClose" type="button" aria-label="Close image preview">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 6l12 12M18 6l-12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <img class="lightbox__img" id="lightboxImg" alt="" />
+  </div>
 
   <div class="layout" id="top">
     <!-- Sidebar -->

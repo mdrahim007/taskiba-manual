@@ -1077,6 +1077,158 @@ function setupSearch() {
 }
 
 /* ---------------------------
+   Image lightbox
+--------------------------- */
+
+function setupLightbox() {
+  const lightbox = $("#lightbox");
+  const img = $("#lightboxImg");
+  const title = $("#lightboxTitle");
+  const closeBtn = $("#lightboxClose");
+  const doc = $("#doc");
+  if (!lightbox || !img || !doc) return;
+
+  let zoom = 1;
+  let lightboxScrollY = 0;
+
+  function applyZoom() {
+    lightbox.style.setProperty("--zoom", zoom.toFixed(2));
+  }
+
+  function openLightbox(target) {
+    const src = target?.getAttribute("src");
+    if (!src) return;
+    const caption = target.getAttribute("alt") || target.getAttribute("title") || "";
+    img.src = src;
+    img.alt = caption;
+    if (title) {
+      title.textContent = caption;
+      title.hidden = !caption;
+    }
+    zoom = 1;
+    applyZoom();
+    lightbox.hidden = false;
+    lightbox.setAttribute("aria-hidden", "false");
+    lightboxScrollY = window.scrollY;
+    document.documentElement.classList.add("no-scroll");
+    document.body.classList.add("no-scroll");
+    document.body.style.top = `-${lightboxScrollY}px`;
+  }
+
+  function closeLightbox() {
+    lightbox.hidden = true;
+    lightbox.setAttribute("aria-hidden", "true");
+    img.src = "";
+    zoom = 1;
+    applyZoom();
+    if (title) {
+      title.textContent = "";
+      title.hidden = true;
+    }
+    document.documentElement.classList.remove("no-scroll");
+    document.body.classList.remove("no-scroll");
+    document.body.style.top = "";
+    window.scrollTo(0, lightboxScrollY);
+  }
+
+  doc.addEventListener("click", (e) => {
+    const target = e.target.closest("img");
+    if (!target || !doc.contains(target)) return;
+    if (!target.classList.contains("image")) return;
+    openLightbox(target);
+  });
+
+  lightbox.addEventListener("pointerdown", (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+  closeBtn?.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    closeLightbox();
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !lightbox.hidden) {
+      closeLightbox();
+    }
+    if (!lightbox.hidden && (e.key === "+" || e.key === "=")) {
+      e.preventDefault();
+      zoom = Math.min(3, zoom + 0.25);
+      applyZoom();
+    }
+    if (!lightbox.hidden && (e.key === "-" || e.key === "_")) {
+      e.preventDefault();
+      zoom = Math.max(1, zoom - 0.25);
+      applyZoom();
+    }
+    if (!lightbox.hidden && (e.key === "0")) {
+      e.preventDefault();
+      zoom = 1;
+      applyZoom();
+    }
+  });
+
+  lightbox.addEventListener("wheel", (e) => {
+    if (lightbox.hidden) return;
+    if (!e.ctrlKey && !e.metaKey) return;
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.1 : 0.1;
+    zoom = Math.max(1, Math.min(3, zoom + delta));
+    applyZoom();
+  }, { passive: false });
+
+  const pointers = new Map();
+  let pinchStartDistance = 0;
+  let pinchStartZoom = 1;
+
+  function getDistance(a, b) {
+    const dx = a.clientX - b.clientX;
+    const dy = a.clientY - b.clientY;
+    return Math.hypot(dx, dy);
+  }
+
+  function onPointerDown(e) {
+    if (lightbox.hidden) return;
+    lightbox.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, e);
+    if (pointers.size === 2) {
+      const [p1, p2] = Array.from(pointers.values());
+      pinchStartDistance = getDistance(p1, p2);
+      pinchStartZoom = zoom;
+    }
+  }
+
+  function onPointerMove(e) {
+    if (lightbox.hidden) return;
+    if (!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, e);
+    if (pointers.size === 2) {
+      const [p1, p2] = Array.from(pointers.values());
+      const distance = getDistance(p1, p2);
+      if (pinchStartDistance > 0) {
+        const rawScale = distance / pinchStartDistance;
+        const scale = 1 + (rawScale - 1) * 0.5;
+        zoom = Math.max(1, Math.min(3, pinchStartZoom * scale));
+        applyZoom();
+      }
+    }
+  }
+
+  function onPointerUp(e) {
+    if (!pointers.has(e.pointerId)) return;
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) {
+      pinchStartDistance = 0;
+    }
+  }
+
+  lightbox.addEventListener("pointerdown", onPointerDown);
+  lightbox.addEventListener("pointermove", onPointerMove);
+  lightbox.addEventListener("pointerup", onPointerUp);
+  lightbox.addEventListener("pointercancel", onPointerUp);
+}
+
+/* ---------------------------
    Mobile drawer
 --------------------------- */
 
@@ -1155,5 +1307,6 @@ function setupDrawer() {
   setupCopyLinks();
   setupHeaderLongPressCopy();
   setupSearch();
+  setupLightbox();
   setupDrawer();
 })();
